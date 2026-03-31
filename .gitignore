@@ -1,0 +1,15 @@
+# Credentials — never commit these
+gcp-serviceaccounts-keys-sa-photobooth-app-storage.json
+*.json.key
+.env
+.env.local
+.env*.local
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+
+# Node
+node_modules/

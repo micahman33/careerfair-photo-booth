@@ -1,0 +1,110 @@
+Cornelius Elementary Style Guide
+Brand Overview
+Cornelius Elementary is a vibrant, welcoming school community. The brand emphasizes fun, learning, inclusivity, and school spirit. Visuals should be friendly, energetic, and accessible to children and families.
+
+Color Palette
+Primary Colors
+
+Blue: #2B4C9A (Main school color, used for headers, footers, and accents)
+Light Green: #B6D77A (Backgrounds, highlights, and fun elements)
+White: #FFFFFF (Text and backgrounds)
+Black: #000000 (Text and outlines)
+
+Secondary Colors
+
+Light Blue: #6CA0DC (For gradients and soft backgrounds)
+Yellow: #FFE066 (For highlights and fun accents)
+
+Typography
+Font Family
+
+Primary Font: Sans-serif typeface (rounded, friendly, e.g., Museo Sans or Comic Sans for headings)
+Headings: Bold, playful weight
+Body Text: Regular weight, easy to read
+
+Font Sizes
+
+H1: 36px-48px (Main headings, e.g., "Welcome to Career Day!")
+H2: 28px-32px (Section headings)
+H3: 22px-24px (Sub-headings)
+Body: 16px-18px
+Small Text: 14px
+
+Layout & Components
+Grid System
+
+Use a responsive 12-column grid system
+Consistent vertical rhythm with 16px base spacing
+24px spacing between major sections
+
+Cards & Containers
+
+Rounded corners (12-16px radius)
+Fun drop shadows
+White or light green backgrounds with padding (24px)
+Important cards/sections use blue or yellow backgrounds or borders
+
+Buttons
+
+Primary: Blue (#2B4C9A) with white text, rounded corners
+Secondary: White or transparent with blue border
+Padding: 14px 28px
+Border Radius: 24px (fully rounded edges)
+
+Navigation
+
+Simple, sticky header with both school and partner logos (side by side with an 'x' between)
+CTAs positioned in upper right if needed
+
+UI Elements
+Icons
+
+Fun, cartoon-style icons
+Blue or yellow accent color for important icons
+Use consistent, kid-friendly icon style throughout
+
+Images
+
+Use cheerful, school-related imagery
+Show students, teachers, and school mascot where possible
+
+Content Style
+Headlines
+
+Fun, welcoming, and positive
+Use action verbs and school spirit
+
+Body Copy
+
+Friendly, accessible language
+Short sentences, easy to read for kids and parents
+
+CTAs
+
+Clear action verbs: "Join the fun!", "Start now!", "See your card!"
+High contrast against backgrounds
+Prominently positioned after value statements
+
+Mobile-Specific Guidelines
+Navigation
+
+Simple hamburger menu for mobile
+Sticky header with both logos
+
+Content Layout
+
+Single column layout
+Progressive disclosure for complex information
+Accordion components for dense content sections
+
+Touch Targets
+
+Minimum 44x44px for all interactive elements
+16px minimum spacing between touch targets
+Ensure buttons have adequate tap area
+
+Performance
+
+Optimize images for mobile
+Minimize JavaScript dependencies
+Implement lazy loading for non-critical content

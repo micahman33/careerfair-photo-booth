@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Career Day AI Photo Booth — Statesville Rd Elementary</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <img src="images/statesvilleroad.png" alt="SRES" class="logo-school">
+    <div class="header-center">
+      <div class="header-title">Career Day AI Photo Booth</div>
+      <div class="header-sub">Statesville Rd Elementary × Automation Anywhere</div>
+    </div>
+    <img src="images/2021-AAI-White.png" alt="Automation Anywhere" class="logo-aa">
+  </header>
+
+  <!-- Progress Indicator -->
+  <div class="progress-bar">
+    <div class="progress-step active" id="prog-1">
+      <div class="progress-num">1</div>
+      <div class="progress-label">Photo</div>
+    </div>
+    <div class="progress-line" id="line-1-2"></div>
+    <div class="progress-step" id="prog-2">
+      <div class="progress-num">2</div>
+      <div class="progress-label">Details</div>
+    </div>
+    <div class="progress-line" id="line-2-3"></div>
+    <div class="progress-step" id="prog-3">
+      <div class="progress-num">3</div>
+      <div class="progress-label">Create!</div>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ===== STEP 1: PHOTO ===== -->
+    <div class="step" id="step-1">
+      <h2>Take Your Photo</h2>
+      <p class="step-hint">Look at the camera and give your best smile!</p>
+
+      <div class="camera-frame" id="camera-frame">
+        <video id="video" autoplay playsinline muted></video>
+        <div id="countdown-overlay" class="countdown-overlay" hidden></div>
+        <div id="flash-overlay" class="flash-overlay" hidden></div>
+      </div>
+      <canvas id="canvas" hidden></canvas>
+
+      <div id="no-camera-msg" class="no-camera-msg" hidden>
+        <p>📷 Camera not available.<br>Please allow camera access and reload the page.</p>
+      </div>
+
+      <div id="camera-actions" class="center-actions">
+        <button class="btn btn-gold btn-xl" id="capture-btn">📸 Take Photo</button>
+      </div>
+
+      <div id="preview-actions" hidden>
+        <div class="photo-taken-wrap">
+          <img id="preview-img" class="photo-taken" alt="Your photo">
+          <div class="photo-badge">Looking good! 🎉</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-outline" id="retake-btn">↩ Retake</button>
+          <button class="btn btn-gold btn-grow" id="next-btn-1">Next Step →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STEP 2: DETAILS ===== -->
+    <div class="step" id="step-2" hidden>
+      <h2>Your Details</h2>
+
+      <div class="field">
+        <label for="personName">Your First Name</label>
+        <input type="text" id="personName" placeholder="e.g. Alex" maxlength="30" autocomplete="off" autocorrect="off">
+      </div>
+      <div class="field">
+        <label for="teacherName">Your Teacher's Name</label>
+        <input type="text" id="teacherName" placeholder="e.g. Ms. Johnson" maxlength="40" autocomplete="off" autocorrect="off">
+      </div>
+
+      <h2 class="section-title">Choose Your Card Type</h2>
+      <div class="card-grid" id="card-grid">
+        <button class="card-opt selected" data-value="trading-card">
+          <span class="card-opt-icon">🃏</span>
+          <span class="card-opt-name">Pokémon Card</span>
+        </button>
+        <button class="card-opt" data-value="action-figure">
+          <span class="card-opt-icon">🤖</span>
+          <span class="card-opt-name">Action Figure</span>
+        </button>
+        <button class="card-opt" data-value="superhero-comic">
+          <span class="card-opt-icon">💥</span>
+          <span class="card-opt-name">Superhero Comic</span>
+        </button>
+        <button class="card-opt" data-value="sports-card">
+          <span class="card-opt-icon">🏆</span>
+          <span class="card-opt-name">Sports Card</span>
+        </button>
+        <button class="card-opt" data-value="minecraft-card">
+          <span class="card-opt-icon">⛏️</span>
+          <span class="card-opt-name">Minecraft Card</span>
+        </button>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" id="back-btn-2">← Back</button>
+        <button class="btn btn-gold btn-xl btn-grow" id="generate-btn" disabled>✨ Generate!</button>
+      </div>
+    </div>
+
+    <!-- ===== STEP 3: LOADING + RESULT ===== -->
+    <div class="step" id="step-3" hidden>
+
+      <div id="loading-state">
+        <p class="loading-title">Creating your card...</p>
+        <div class="wheel-and-hamster" aria-label="Loading animation" role="img">
+          <div class="wheel"></div>
+          <div class="hamster">
+            <div class="hamster__body">
+              <div class="hamster__head">
+                <div class="hamster__ear"></div>
+                <div class="hamster__eye"></div>
+                <div class="hamster__nose"></div>
+              </div>
+              <div class="hamster__limb hamster__limb--fr"></div>
+              <div class="hamster__limb hamster__limb--fl"></div>
+              <div class="hamster__limb hamster__limb--br"></div>
+              <div class="hamster__limb hamster__limb--bl"></div>
+              <div class="hamster__tail"></div>
+            </div>
+          </div>
+          <div class="spoke"></div>
+        </div>
+        <p class="progress-message">Feeding the hamster...</p>
+      </div>
+
+      <div id="result-state" hidden>
+        <h2>Your card is ready! 🎉</h2>
+        <img id="result-image" alt="Your generated card" class="result-img">
+        <p class="download-hint">⬇️ Your card downloaded automatically to this device!</p>
+        <button class="btn btn-gold btn-xl" id="start-over-btn">🔄 Make Another Card</button>
+      </div>
+
+      <div id="error-state" hidden>
+        <div class="error-box">
+          <p class="error-msg" id="error-text">😞 Something went wrong. Please try again.</p>
+          <button class="btn btn-outline" id="retry-btn">← Try Again</button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2026 Automation Anywhere × Statesville Rd Elementary</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
