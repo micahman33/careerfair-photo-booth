@@ -102,127 +102,158 @@ function checkGenerateBtn() {
 }
 
 // ===== PROMPT BUILDER =====
+// KEY STRATEGY: We tell the AI to leave a solid navy rectangle at the very bottom.
+// After generation we composite the real AA logo + school text onto that space in
+// the browser using Canvas — so those elements are always pixel-perfect.
+
 function buildPrompt(cardType, personName, teacherName) {
+  const BANNER_INSTRUCTION = `BOTTOM BANNER AREA (bottom 10% of the image): Leave this as a solid flat navy blue (#1A3B8C) rectangle with NO text, NO logos, and NO decorations. It must be completely empty — we will add the sponsor logos and school name in post-production.`;
+
   if (cardType === 'trading-card') {
-    return `Create a fun, ultra-rare trading card styled exactly like a real Pokemon card laying on a table. The image must look like a real, physical trading card, perfectly centered and styled for printing as a 4x6 image. Use the following layout and elements:
+    return `Create a fun, ultra-rare Pokemon-style trading card. The image must look like a real physical trading card, perfectly centered, styled for printing as a 4x6 image.
 
-Card Layout (from top to bottom):
-1. TOP LEFT: Teacher's name ("${teacherName}") as a subtitle, in a smaller font.
-2. TOP LEFT, just below: Kid's name ("${personName}") in a larger, bold font.
-3. TOP RIGHT: "300HP" in a bold, Pokemon-style font.
-4. TOP RIGHT, just below: "Ultra Rare" badge.
-5. CENTER: Anime-style portrait of the kid, inspired by the reference photo but always looking like a kid in anime/pokemon style, smiling and friendly.
-6. BOTTOM HALF: Three key attributes for becoming a software developer/IT professional:
-   - Each attribute should have a name, short description, and power value (e.g., 80, 90, 70)
-   - Example: "Creativity: Thinks of new ideas (80)", "Problem Solving: Finds solutions (90)", "Teamwork: Works well with others (70)"
-7. BOTTOM BANNER (spanning the width of the card):
-   - Left: The Automation Anywhere logo
-   - Right: "STATESVILLE RD ELEMENTARY CAREER FAIR" in all caps
-   - The banner should be navy blue with gold text
+CARD LAYOUT — follow this exactly:
+- GOLD/YELLOW outer border (thick, like a real Pokemon card)
+- TOP LEFT: The text "${teacherName}" in small font
+- TOP LEFT below that: The text "${personName}" in large bold font
+- TOP RIGHT: "300 HP" in large bold Pokemon-style font
+- TOP RIGHT below that: A gold star badge reading "Ultra Rare"
+- CENTER (main art area): An anime/manga-style illustration of the person from the reference photo. Make them look like a friendly anime kid character, smiling. Bright colorful background with sparkles and energy bursts.
+- LOWER CARD (attribute section): Three ability rows in classic Pokemon card style, each on its own line:
+  Row 1: "⚡ Creativity — 80"
+  Row 2: "🧠 Problem Solving — 90"
+  Row 3: "🤝 Teamwork — 70"
+  Use LARGE, clearly readable text for each row. Simple layout, no clutter.
+- ${BANNER_INSTRUCTION}
 
-Additional Requirements:
-- The card must have a yellow/gold border and a realistic shadow, looking like it is laying on a table
-- The background should be playful and colorful, with sparkles or energy effects
-- The overall style should be fun, empowering, and collectible, just like a real Pokemon card
-- IMPORTANT: MAKE SURE THERE ARE NO SPELLING ERRORS IN ANY OF THE TEXT!`;
+Style: Bright, playful, collectible. Realistic card shadow like it's sitting on a table. DO NOT add any other text beyond what is listed above.`;
   }
 
   if (cardType === 'action-figure') {
-    return `Create a fun, empowering action figure packaging image for a child in the style of a collectible toy you'd find on a toy store shelf. The image must look like a real blister-pack toy (plastic bubble over cardboard backing), perfectly centered and styled for printing as a 4x6 image.
+    return `Create a fun action figure toy packaging image, like a collectible you'd find at a toy store — a plastic blister pack (clear bubble) over a colorful cardboard backing. Styled for printing as a 4x6 image.
 
-Packaging Layout:
-1. TOP HEADER: Bold title in a fun comic or toy-style font: "${personName} Future Tech Hero"
-2. TOP CORNER BADGE: "Career Fair Edition" on the left. Teacher's name ("${teacherName}") in the top right corner.
-3. MAIN IMAGE (CENTER): A 3D cartoon-style action figure based on the child in the reference photo:
-   - Stylized and age-appropriate, like a superhero/toy character
-   - Smiling and posed heroically
-   - THE ENTIRE figure and ALL accessories must appear FULLY INSIDE a clear, highly visible plastic blister pack bubble. The plastic bubble must be clearly visible with realistic light reflections. NO part of the character or accessories should break through the bubble.
-   - Wearing a futuristic or STEM-themed outfit
+PACKAGING LAYOUT — follow this exactly:
+- TOP HEADER (cardboard backing, top): The text "${personName} — FUTURE TECH HERO" in large bold comic/toy font. Use navy blue and gold colors.
+- TOP LEFT CORNER: A circular yellow badge with the text "Career Fair Edition"
+- TOP RIGHT CORNER: The text "${teacherName}" in small font
+- CENTER: A 3D cartoon-style toy figure of the person from the reference photo. The figure must be:
+  - Fully enclosed inside a clear plastic bubble/blister pack (visible plastic with light reflections)
+  - Smiling and in a confident heroic pose
+  - Wearing a fun STEM-themed outfit
+  - Accompanied by exactly 3 small accessories inside the bubble: a mini laptop, a small robot, and a backpack
+  - NO part of the figure or accessories breaks outside the bubble
+- BACKGROUND (cardboard area around bubble): Bright comic-style sunburst rays in blue and gold
+- ${BANNER_INSTRUCTION}
 
-4. ACCESSORIES (VISIBLE IN PACKAGING):
-   - EXACTLY 3 fun toy accessories: mini laptop, robot assistant, kids backpack
-
-5. BACKGROUND: Bright, colorful, playful with comic-style rays, sparkles, or digital patterns. Blues, golds, and purples.
-
-6. BOTTOM TEXT:
-   - "Presented by Automation Anywhere & STATESVILLE RD ELEMENTARY CAREER FAIR"
-   - Automation Anywhere logo on the lower left
-   - "Ages 6+ | Future Innovator Series" on the lower right
-   - IMPORTANT: MAKE SURE THERE ARE NO SPELLING ERRORS IN ANY OF THE TEXT!`;
+Style: Realistic toy packaging. The plastic bubble must look real — glossy, with reflections. DO NOT add any other text beyond what is listed above.`;
   }
 
   if (cardType === 'superhero-comic') {
-    return `Create a vibrant superhero comic book cover featuring the child from the reference photo as the star superhero. The image must look like a real, printed comic book cover, perfectly sized for printing as a 4x6 image.
+    return `Create a superhero comic book cover. It must look like a real printed comic book cover, styled for printing as a 4x6 image.
 
-Comic Cover Layout:
-1. TOP BANNER: Classic comic book title banner: "${personName}'s TECH ADVENTURES" in bold retro comic lettering. Small badge: "Career Fair Edition"
-2. TEACHER CREDIT: Small text near the top: "Starring ${teacherName}'s Class"
-3. MAIN ARTWORK: A dynamic full-body illustration of the child as a superhero:
-   - Marvel/DC-style cartoon superhero
-   - Colorful STEM-themed costume (circuit board patterns, glowing tech accents)
-   - Heroic pose — flying, fist forward, or cape billowing
-   - Smiling confidently
-   - City skyline or digital world background with bright energy effects
-4. SPEECH BUBBLE: Classic comic speech bubble: "With CODE comes POWER!"
-5. BOTTOM BANNER: "Presented by Automation Anywhere & STATESVILLE RD ELEMENTARY CAREER FAIR"
-   - Automation Anywhere logo lower left
-   - "Issue #1 | Future Tech Heroes Series" lower right
+COVER LAYOUT — follow this exactly:
+- TOP TITLE BANNER: Large bold retro comic lettering: "${personName}'s TECH ADVENTURES" — make this text LARGE and take up the full width, like a real comic title. Use navy blue background with gold letters and thick black outline.
+- SMALL TEXT below title: "Career Fair Edition · ${teacherName}'s Class" — small but readable
+- MAIN ART (center, majority of the cover): A full-body dynamic illustration of the person from the reference photo as a superhero. They should:
+  - Have a colorful STEM-themed superhero costume (circuit board patterns, glowing blue tech lines)
+  - Be flying or leaping heroically with fist forward, smiling
+  - Be in front of a dramatic city skyline with light beams and energy effects
+- ONE SPEECH BUBBLE in the art: "With CODE comes POWER!" — large, readable comic speech bubble
+- Issue label (small, bottom right of art area): "ISSUE #1"
+- ${BANNER_INSTRUCTION}
 
-Style: Bold saturated colors, Ben-Day dot halftone textures, thick black outlines, dynamic action lines.
-- IMPORTANT: MAKE SURE THERE ARE NO SPELLING ERRORS IN ANY OF THE TEXT!`;
-  }
-
-  if (cardType === 'sports-card') {
-    return `Create a fun, collectible sports trading card styled exactly like a real professional baseball or basketball rookie card. Perfectly sized for printing as a 4x6 image.
-
-Card Layout:
-1. TOP HEADER: Team banner: "STATESVILLE RD ELEMENTARY ALL-STARS" in bold sports font
-2. TOP LEFT: "${teacherName}'s Class" in small text
-3. MAIN IMAGE (CENTER): A dynamic sports-photo-style portrait of the child from the reference photo:
-   - Styled as a professional athlete card photo
-   - Child wearing a colorful team jersey with "SRES" on it, navy blue and gold colors
-   - Confident action-ready pose (throwing, dribbling, or running stance)
-   - Stadium or gym background with crowd blur
-4. NAMEPLATE: Large chrome/foil-style nameplate:
-   - "${personName}" in large bold letters
-   - Position: "FUTURE TECH INNOVATOR" below the name
-5. STATS BOX:
-   - "CREATIVITY: 99" | "PROBLEM SOLVING: 95" | "TEAMWORK: 98"
-   - "ROOKIE YEAR: 2025-2026"
-6. BOTTOM BANNER: "Presented by Automation Anywhere & STATESVILLE RD ELEMENTARY CAREER FAIR"
-   - Automation Anywhere logo lower left
-   - "RC Rookie Card" badge lower right
-
-Style: Chrome and holographic foil effects, navy blue and gold team colors, glossy premium card feel.
-- IMPORTANT: MAKE SURE THERE ARE NO SPELLING ERRORS IN ANY OF THE TEXT!`;
+Style: Bold colors, thick black outlines, Ben-Day dot halftone texture, dynamic action lines. DO NOT add any other text beyond what is listed above.`;
   }
 
   if (cardType === 'minecraft-card') {
-    return `Create a fun Minecraft-themed character card featuring the child from the reference photo as a pixelated Minecraft character. Perfectly sized for printing as a 4x6 image.
+    return `Create a Minecraft-themed collectible character card. Everything must be rendered in Minecraft's iconic blocky pixel-art style. Styled for printing as a 4x6 image.
 
-Card Layout:
-1. TOP HEADER: "MINECRAFT CAREER FAIR EDITION" in classic Minecraft blocky pixel font on a dark stone-block banner
-2. TOP RIGHT: "${teacherName}'s Class" in small pixel text
-3. MAIN IMAGE (CENTER): A Minecraft-style pixel art character based on the child:
-   - Full-body Minecraft skin styled to look like the child (matching hair color, skin tone, general features)
-   - Wearing a STEM-themed Minecraft skin: lab coat or tech gear
-   - Classic Minecraft stance, holding a diamond pickaxe AND a laptop
-   - Standing in a Minecraft world: blocky landscape, trees, pixelated sky with Minecraft sun
-4. PLAYER STATS (Minecraft game UI style):
-   - Name tag floating above character: "${personName}"
-   - "HEALTH: ❤❤❤❤❤ 10/10"
-   - "XP LEVEL: CAREER FAIR CHAMPION"
-   - Skill bars: "CREATIVITY ████████ 8/10", "CODING █████████ 9/10", "TEAMWORK ████████ 8/10"
-5. BOTTOM BANNER: "Presented by Automation Anywhere & STATESVILLE RD ELEMENTARY CAREER FAIR"
-   - Minecraft grass-block divider
-   - Automation Anywhere logo lower left
-   - "Limited Edition | Tech Crafter Series" lower right
+CARD LAYOUT — follow this exactly:
+- TOP HEADER: A dark stone-block banner (pixelated texture) with the text "MINECRAFT" in the official Minecraft font (blocky, pixelated, green/white), and below it "CAREER FAIR EDITION" in smaller pixel text
+- TEACHER LABEL (top right, small pixel font): "${teacherName}"
+- MAIN ART (center, large): A full-body Minecraft skin/character based on the person from the reference photo:
+  - Classic blocky Minecraft character proportions
+  - Wearing a white lab coat skin over their outfit, holding a diamond pickaxe in one hand and a blocky laptop in the other
+  - Standing on grass blocks with a blue Minecraft sky behind them
+  - The character's face/hair should match the reference photo as closely as possible in pixel style
+- NAME TAG (floating above character, like in Minecraft): "${personName}" — white text on dark semi-transparent background, pixel font
+- STATS PANEL (below character, dark stone UI panel):
+  - "❤ HEALTH: 10/10" on one line (large pixel text)
+  - "XP: CAREER FAIR CHAMPION" on one line (large pixel text)
+- ${BANNER_INSTRUCTION}
 
-Style: Minecraft's iconic blocky pixel-art style, dark background with green and grey stone-block UI panels, glowing enchantment effects.
-- IMPORTANT: MAKE SURE THERE ARE NO SPELLING ERRORS IN ANY OF THE TEXT!`;
+Style: Pure Minecraft pixel-art aesthetic. Dark background. Glowing enchantment particle effects around the character. Keep all text LARGE and readable. DO NOT add any other text beyond what is listed above.`;
   }
 
   return '';
+}
+
+// ===== BANNER COMPOSITING =====
+// Stamps the real AA logo + school name onto the blank navy bar the AI left.
+async function compositeBanner(b64png) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const W = img.width;
+      const H = img.height;
+      const BANNER_H = Math.round(H * 0.10); // 10% from bottom
+      const Y = H - BANNER_H;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext('2d');
+
+      // Draw base image
+      ctx.drawImage(img, 0, 0);
+
+      // Ensure banner area is solid navy (in case AI bled over)
+      ctx.fillStyle = '#1A3B8C';
+      ctx.fillRect(0, Y, W, BANNER_H);
+
+      // Separator line in gold
+      ctx.fillStyle = '#F5A800';
+      ctx.fillRect(0, Y, W, 3);
+
+      // Load AA logo and draw it
+      const aaLogo = new Image();
+      aaLogo.onload = () => {
+        const logoH = BANNER_H * 0.65;
+        const logoW = aaLogo.width * (logoH / aaLogo.height);
+        const logoX = W * 0.04;
+        const logoY = Y + (BANNER_H - logoH) / 2;
+        ctx.drawImage(aaLogo, logoX, logoY, logoW, logoH);
+
+        // School name text on the right side
+        const fontSize = Math.round(BANNER_H * 0.28);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = `700 ${fontSize}px "Segoe UI", Arial, sans-serif`;
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        const textX = W - W * 0.04;
+        const line1Y = Y + BANNER_H * 0.33;
+        const line2Y = Y + BANNER_H * 0.68;
+        ctx.fillText('STATESVILLE RD ELEMENTARY', textX, line1Y);
+        ctx.fillStyle = '#F5A800';
+        ctx.fillText('CAREER FAIR', textX, line2Y);
+
+        resolve(canvas.toDataURL('image/png'));
+      };
+      aaLogo.onerror = () => {
+        // If logo fails to load, still resolve without it
+        const fontSize = Math.round(BANNER_H * 0.28);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = `700 ${fontSize}px "Segoe UI", Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('AUTOMATION ANYWHERE  ·  STATESVILLE RD ELEMENTARY CAREER FAIR', W / 2, Y + BANNER_H / 2);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      aaLogo.src = 'images/AAI standard.png';
+    };
+    img.onerror = reject;
+    img.src = `data:image/png;base64,${b64png}`;
+  });
 }
 
 // ===== PROGRESS MESSAGES =====
@@ -275,10 +306,8 @@ async function generateCard() {
   stopCamera();
 
   try {
-    // Strip data URL prefix from photo
     const photoBase64 = photoDataUrl.replace(/^data:image\/(jpeg|png|webp);base64,/, '');
 
-    // Fetch AA logo and convert to base64
     const aaResp = await fetch('images/AAI standard.png');
     if (!aaResp.ok) throw new Error('Could not load AA logo');
     const aaLogoBase64 = await blobToBase64(await aaResp.blob());
@@ -302,14 +331,16 @@ async function generateCard() {
     const b64 = data.data?.[0]?.b64_json;
     if (!b64) throw new Error('No image returned from API');
 
-    const imgSrc = `data:image/png;base64,${b64}`;
-    document.getElementById('result-image').src = imgSrc;
+    // Composite real banner on top of AI result
+    const finalImgSrc = await compositeBanner(b64);
+
+    document.getElementById('result-image').src = finalImgSrc;
     document.getElementById('loading-state').hidden = true;
     document.getElementById('result-state').hidden = false;
 
     // Auto-download
     const a = document.createElement('a');
-    a.href = imgSrc;
+    a.href = finalImgSrc;
     a.download = `${filename}.png`;
     a.click();
 
@@ -336,14 +367,13 @@ document.getElementById('retake-btn').addEventListener('click', () => {
   document.getElementById('camera-frame').hidden = false;
   document.getElementById('camera-actions').hidden = false;
   document.getElementById('preview-actions').hidden = true;
-  // Restart camera if needed
   if (!videoStream) initCamera();
 });
 
 document.getElementById('next-btn-1').addEventListener('click', () => goToStep(2));
+
 document.getElementById('back-btn-2').addEventListener('click', () => {
   goToStep(1);
-  // Show camera or preview depending on whether photo exists
   if (photoDataUrl) {
     document.getElementById('camera-frame').hidden = true;
     document.getElementById('camera-actions').hidden = true;
@@ -371,7 +401,6 @@ document.getElementById('start-over-btn').addEventListener('click', () => {
   selectedCardType = 'trading-card';
   checkGenerateBtn();
 
-  // Reset step 1 to camera view
   document.getElementById('camera-frame').hidden = false;
   document.getElementById('camera-actions').hidden = false;
   document.getElementById('preview-actions').hidden = true;

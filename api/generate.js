@@ -28,10 +28,10 @@ export default async function handler(req, res) {
     }
 
     form.append('prompt', prompt);
-    form.append('model', 'gpt-image-1');
+    form.append('model', 'gpt-image-1.5');
     form.append('size', size || '1024x1536');
     form.append('output_format', 'png');
-    form.append('quality', 'medium');
+    form.append('quality', 'high');
 
     const openaiRes = await fetch('https://api.openai.com/v1/images/edits', {
       method: 'POST',
