@@ -163,6 +163,29 @@ async function main() {
     assert(!bareRule, 'Found bare .camera-row { display: ... } rule — this overrides [hidden]. Use .camera-row:not([hidden]) instead.');
   });
 
+  await test('Card grid is horizontal (flex row, not 2-column grid)', async () => {
+    const r   = await fetch(`${BASE_URL}/styles.css`);
+    const css = await r.text();
+    // Should NOT have grid-template-columns (means it's still a grid)
+    const hasGridCols = css.match(/\.card-grid\s*\{[^}]*grid-template-columns[^}]*\}/);
+    assert(!hasGridCols, '.card-grid still uses grid-template-columns — should be a horizontal flex row');
+  });
+
+  await test('Banner reservation is 15% in client-side compositing', async () => {
+    const r  = await fetch(`${BASE_URL}/script.js`);
+    const js = await r.text();
+    assert(js.includes('0.15'), 'script.js compositeBanner should use 0.15 (15%) not 0.10 (10%)');
+    assert(!js.includes('0.10'), 'script.js still has 0.10 — update to 0.15 to match prompts');
+  });
+
+  await test('Minecraft card uses career skills (not HEALTH/XP game stats)', async () => {
+    const r  = await fetch(`${BASE_URL}/script.js`);
+    const js = await r.text();
+    assert(!js.includes('HEALTH: 10/10'), 'Minecraft prompt still has game stat "HEALTH: 10/10" — replace with career skills');
+    assert(!js.includes('XP: CAREER FAIR CHAMPION'), 'Minecraft prompt still has "XP: CAREER FAIR CHAMPION" — replace with career skills');
+    assert(js.includes('CREATIVITY'), 'Minecraft prompt should include CREATIVITY skill');
+  });
+
   // ── Full generation test (optional, costs money) ──────────────────────────
   if (FULL) {
     console.log('\n🤖  Full generation test (calls OpenAI)');
