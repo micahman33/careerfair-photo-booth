@@ -171,19 +171,26 @@ async function main() {
     assert(!hasGridCols, '.card-grid still uses grid-template-columns — should be a horizontal flex row');
   });
 
-  await test('Banner reservation is 18% in client-side compositing', async () => {
+  await test('Banner is added by extending canvas (not overlaying on AI image)', async () => {
     const r  = await fetch(`${BASE_URL}/script.js`);
     const js = await r.text();
-    assert(js.includes('0.18'), 'script.js compositeBanner should use 0.18 (18%)');
-    assert(!js.includes('* 0.10'), 'script.js still has old 0.10 value');
-    assert(!js.includes('* 0.15'), 'script.js still has old 0.15 value');
+    // New architecture: canvas.height = H + BANNER_H, not H
+    assert(js.includes('H + BANNER_H'), 'compositeBanner should extend canvas height (H + BANNER_H), not overlay');
+    assert(!js.includes('BANNER_INSTRUCTION'), 'No BANNER_INSTRUCTION should remain in prompts');
+  });
+
+  await test('Prompts do not reserve space or constrain AI image area', async () => {
+    const r  = await fetch(`${BASE_URL}/script.js`);
+    const js = await r.text();
+    assert(!js.includes('top 82%'), 'Prompt should not constrain AI to top 82%');
+    assert(!js.includes('bottom 18% is reserved'), 'Prompt should not reserve bottom 18%');
   });
 
   await test('Minecraft card uses career skills (not HEALTH/XP game stats)', async () => {
     const r  = await fetch(`${BASE_URL}/script.js`);
     const js = await r.text();
-    assert(!js.includes('HEALTH: 10/10'), 'Minecraft prompt still has game stat "HEALTH: 10/10" — replace with career skills');
-    assert(!js.includes('XP: CAREER FAIR CHAMPION'), 'Minecraft prompt still has "XP: CAREER FAIR CHAMPION" — replace with career skills');
+    assert(!js.includes('HEALTH: 10/10'), 'Minecraft prompt still has game stat "HEALTH: 10/10"');
+    assert(!js.includes('XP: CAREER FAIR CHAMPION'), 'Minecraft prompt still has "XP: CAREER FAIR CHAMPION"');
     assert(js.includes('CREATIVITY'), 'Minecraft prompt should include CREATIVITY skill');
   });
 

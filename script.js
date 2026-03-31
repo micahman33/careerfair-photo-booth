@@ -102,20 +102,13 @@ function checkGenerateBtn() {
 }
 
 // ===== PROMPT BUILDER =====
-// KEY STRATEGY: We tell the AI to leave a solid navy rectangle at the very bottom.
-// After generation we composite the real AA logo + school text onto that space in
-// the browser using Canvas — so those elements are always pixel-perfect.
+// No banner instructions in prompts — the banner is added BELOW the image
+// by extending the canvas after generation. The AI uses the full image space.
 
 function buildPrompt(cardType, personName, teacherName) {
-  // The banner is composited in code AFTER generation (real AA logo + school name).
-  // We ask the AI to leave 15% of the image height as a plain navy rectangle at the very
-  // bottom — this gives enough clearance so card content never gets covered.
-  const BANNER_INSTRUCTION = `BOTTOM BANNER ZONE (the bottom 18% of the full image height): This entire strip must be a solid flat navy blue (#1A3B8C) rectangle with absolutely NO text, NO logos, NO artwork, and NO decorations of any kind. All card content (borders, art, stats, text) must be fully contained within the top 82% of the image. This zone will be replaced in post-production.`;
 
   if (cardType === 'trading-card') {
     return `Create a fun, ultra-rare Pokemon-style trading card. The image must look like a real physical trading card, perfectly centered, styled for printing as a 4x6 image.
-
-IMPORTANT: All card content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 CARD LAYOUT — follow this exactly:
 - GOLD/YELLOW outer border (thick, like a real Pokemon card)
@@ -124,14 +117,13 @@ CARD LAYOUT — follow this exactly:
 - TOP RIGHT: "300 HP" in large bold Pokemon-style font
 - TOP RIGHT below that: A gold star badge reading "Ultra Rare"
 - CENTER (main art area): An anime/manga-style illustration of the person from the reference photo. Make them look like a friendly anime kid character, smiling. Bright colorful background with sparkles and energy bursts.
-- LOWER CARD (skill section, inside top 82%): Three skill rows in classic Pokemon card style. Each row has TWO lines — a bold name/score line followed by a smaller italic flavor description, exactly like a real Pokemon card attack description:
+- LOWER CARD (skill section): Three skill rows in classic Pokemon card style. Each row has TWO lines — a bold name/score line followed by a smaller italic flavor description, exactly like a real Pokemon card attack description:
   Row 1 bold:   "💡 Creativity — 80"
   Row 1 italic: "Dreams up bold new ideas and turns imagination into reality."
   Row 2 bold:   "⚙️ Problem Solving — 90"
   Row 2 italic: "Breaks any challenge into steps and never gives up finding the answer."
   Row 3 bold:   "🤝 Collaboration — 85"
   Row 3 italic: "Makes every teammate better and builds something greater together."
-- ${BANNER_INSTRUCTION}
 
 Style: Bright, playful, collectible. Realistic card shadow like it's sitting on a table. DO NOT add any other text beyond what is listed above.`;
   }
@@ -139,20 +131,17 @@ Style: Bright, playful, collectible. Realistic card shadow like it's sitting on 
   if (cardType === 'action-figure') {
     return `Create a fun action figure toy packaging image, like a collectible you'd find at a toy store — a plastic blister pack (clear bubble) over a colorful cardboard backing. Styled for printing as a 4x6 image.
 
-IMPORTANT: All packaging content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
-
 PACKAGING LAYOUT — follow this exactly:
-- TOP HEADER (cardboard backing, top 15% of image): The text "${personName} — FUTURE TECH HERO" in large bold comic/toy font. Use navy blue and gold colors.
+- TOP HEADER (cardboard backing): The text "${personName} — FUTURE TECH HERO" in large bold comic/toy font. Use navy blue and gold colors.
 - TOP LEFT CORNER: A circular yellow badge with the text "Career Fair Edition"
 - TOP RIGHT CORNER: The text "${teacherName}" in small font
 - CENTER (inside the blister pack bubble): A 3D cartoon-style toy figure of the person from the reference photo:
   - Fully enclosed inside a clear plastic bubble/blister pack (visible plastic with light reflections)
   - Smiling and in a confident heroic pose, wearing a fun STEM-themed outfit
   - Accompanied by exactly 3 small accessories inside the bubble: a mini laptop, a small robot, and a backpack
-- SKILL BADGES on the cardboard below the bubble (still inside the top 85%):
+- SKILL BADGES on the cardboard below the bubble:
   Three small colored badges reading: "💡 CREATIVE THINKER"  "⚙️ PROBLEM SOLVER"  "🚀 INNOVATOR"
 - BACKGROUND (cardboard area around bubble): Bright comic-style sunburst rays in blue and gold
-- ${BANNER_INSTRUCTION}
 
 Style: Realistic toy packaging. The plastic bubble must look real — glossy, with reflections. DO NOT add any other text beyond what is listed above.`;
   }
@@ -160,27 +149,22 @@ Style: Realistic toy packaging. The plastic bubble must look real — glossy, wi
   if (cardType === 'superhero-comic') {
     return `Create a superhero comic book cover. It must look like a real printed comic book cover, styled for printing as a 4x6 image.
 
-IMPORTANT: All cover content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
-
 COVER LAYOUT — follow this exactly:
-- TOP TITLE BANNER (top 12% of image): Large bold retro comic lettering: "${personName}'s TECH ADVENTURES" — full width, navy blue background, gold letters, thick black outline.
+- TOP TITLE BANNER: Large bold retro comic lettering: "${personName}'s TECH ADVENTURES" — full width, navy blue background, gold letters, thick black outline.
 - SMALL TEXT below title: "Career Fair Edition · ${teacherName}'s Class" — small but readable
 - MAIN ART (center, fills most of the cover): A full-body dynamic illustration of the person from the reference photo as a superhero:
   - Colorful STEM-themed superhero costume (circuit board patterns, glowing blue tech lines)
   - Flying or leaping heroically with fist forward, big smile
   - Dramatic city skyline background with light beams and energy effects
 - SPEECH BUBBLE: "Creativity + Code = SUPERPOWERS!" — large, readable comic speech bubble
-- SKILL STRIP (just above the bottom 15% reserve, inside the art area): Three small comic-style banners: "💡 CREATIVE" · "⚙️ ANALYTICAL" · "🤝 COLLABORATIVE"
-- Issue label (small, bottom right of art area): "ISSUE #1"
-- ${BANNER_INSTRUCTION}
+- SKILL STRIP at the bottom of the art: Three small comic-style banners: "💡 CREATIVE" · "⚙️ ANALYTICAL" · "🤝 COLLABORATIVE"
+- Issue label (small, bottom right): "ISSUE #1"
 
 Style: Bold colors, thick black outlines, Ben-Day dot halftone texture, dynamic action lines. DO NOT add any other text beyond what is listed above.`;
   }
 
   if (cardType === 'minecraft-card') {
     return `Create a Minecraft-themed collectible character card. Everything must be rendered in Minecraft's iconic blocky pixel-art style. Styled for printing as a 4x6 image.
-
-IMPORTANT: All card content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 CARD LAYOUT — follow this exactly:
 - TOP HEADER (dark stone-block texture, pixelated): The text "MINECRAFT" in the official Minecraft font (blocky, pixelated, green/white), and below it "CAREER FAIR EDITION" in smaller pixel text
@@ -191,11 +175,10 @@ CARD LAYOUT — follow this exactly:
   - Standing on grass blocks with a blue Minecraft sky
   - Face/hair should match the reference photo as closely as possible in pixel style
 - NAME TAG (floating above character): "${personName}" — white text on dark semi-transparent background, pixel font
-- SKILLS PANEL (below character, dark stone UI panel, inside top 85%):
+- SKILLS PANEL (bottom of card, dark stone UI panel):
   - "💡 CREATIVITY: LEVEL 10" — large pixel text
   - "⚙ PROBLEM SOLVING: LEVEL 9" — large pixel text
   - "🤝 TEAMWORK: LEVEL 10" — large pixel text
-- ${BANNER_INSTRUCTION}
 
 Style: Pure Minecraft pixel-art aesthetic. Dark background. Glowing enchantment particle effects around the character. Keep all text LARGE and readable. DO NOT add any other text beyond what is listed above.`;
   }
@@ -204,48 +187,50 @@ Style: Pure Minecraft pixel-art aesthetic. Dark background. Glowing enchantment 
 }
 
 // ===== BANNER COMPOSITING =====
-// Stamps the real AA logo + school name onto the blank navy bar the AI left.
+// Extends the canvas BELOW the AI image and draws the sponsor banner there.
+// The AI image is untouched — no content ever gets covered.
 async function compositeBanner(b64png) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
       const W = img.width;
       const H = img.height;
-      const BANNER_H = Math.round(H * 0.18); // 18% — matches BANNER_INSTRUCTION in prompts
-      const Y = H - BANNER_H;
+      const BANNER_H = Math.round(H * 0.18); // Banner added below — ~18% of original height
       const PAD = Math.round(W * 0.035);
 
+      // Canvas is taller: original image + banner strip below
       const canvas = document.createElement('canvas');
       canvas.width = W;
-      canvas.height = H;
+      canvas.height = H + BANNER_H;
       const ctx = canvas.getContext('2d');
 
-      // Draw base image
+      // Draw the full AI image at the top, completely unmodified
       ctx.drawImage(img, 0, 0);
 
-      // Solid navy banner (covers anything the AI drew in the reserved zone)
+      // Draw navy banner below the image
+      const Y = H; // Banner starts right at the bottom of the original image
       ctx.fillStyle = '#1A3B8C';
       ctx.fillRect(0, Y, W, BANNER_H);
 
-      // Gold separator line
+      // Gold separator line at the top of the banner
       ctx.fillStyle = '#F5A800';
       ctx.fillRect(0, Y, W, 3);
 
       const aaLogo = new Image();
       aaLogo.onload = () => {
-        // Logo: left-aligned
+        // Logo: left-aligned within banner
         const logoH = Math.round(BANNER_H * 0.62);
         const logoW = Math.round(aaLogo.width * (logoH / aaLogo.height));
         const logoX = PAD;
         const logoY = Y + Math.round((BANNER_H - logoH) / 2);
         ctx.drawImage(aaLogo, logoX, logoY, logoW, logoH);
 
-        // Text area: starts AFTER the logo + a gap — never overlaps
+        // Text area: starts AFTER the logo — can never overlap
         const textLeft = logoX + logoW + PAD;
         const textRight = W - PAD;
         const textAreaW = textRight - textLeft;
 
-        // Auto-shrink font until "STATESVILLE RD ELEMENTARY" fits in the text area
+        // Auto-shrink font until school name fits
         let fontSize = Math.round(BANNER_H * 0.30);
         ctx.font = `800 ${fontSize}px "Segoe UI", Arial, sans-serif`;
         while (ctx.measureText('STATESVILLE RD ELEMENTARY').width > textAreaW && fontSize > 10) {
@@ -365,7 +350,7 @@ async function generateCard() {
     const b64 = data.data?.[0]?.b64_json;
     if (!b64) throw new Error('No image returned from API');
 
-    // Composite real banner on top of AI result
+    // Extend canvas below image and composite the real banner
     const finalImgSrc = await compositeBanner(b64);
 
     hideLoadingOverlay();
@@ -449,4 +434,3 @@ document.getElementById('start-over-btn').addEventListener('click', () => {
 document.getElementById('retry-btn').addEventListener('click', () => {
   goToStep(2);
 });
-

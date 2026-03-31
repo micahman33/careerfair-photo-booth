@@ -22,14 +22,12 @@ mkdirSync(OUT_DIR, { recursive: true });
 
 const PERSON  = 'Micah';
 const TEACHER = 'Ms. Smith';
-const BANNER_INSTRUCTION = `BOTTOM BANNER ZONE (the bottom 18% of the full image height): This entire strip must be a solid flat navy blue (#1A3B8C) rectangle with absolutely NO text, NO logos, NO artwork, and NO decorations of any kind. All card content (borders, art, stats, text) must be fully contained within the top 82% of the image. This zone will be replaced in post-production.`;
+// No banner instruction in prompts — banner is added BELOW the image by extending canvas.
 
 const cards = [
   {
     id: 'pokemon',
     prompt: `Create a fun, ultra-rare Pokemon-style trading card. The image must look like a real physical trading card, perfectly centered, styled for printing as a 4x6 image.
-
-IMPORTANT: All card content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 CARD LAYOUT — follow this exactly:
 - GOLD/YELLOW outer border (thick, like a real Pokemon card)
@@ -38,14 +36,13 @@ CARD LAYOUT — follow this exactly:
 - TOP RIGHT: "300 HP" in large bold Pokemon-style font
 - TOP RIGHT below that: A gold star badge reading "Ultra Rare"
 - CENTER (main art area): An anime/manga-style illustration of the person from the reference photo. Make them look like a friendly anime kid character, smiling. Bright colorful background with sparkles and energy bursts.
-- LOWER CARD (skill section, inside top 82%): Three skill rows in classic Pokemon card style. Each row has TWO lines — a bold name/score line followed by a smaller italic flavor description, exactly like a real Pokemon card attack description:
+- LOWER CARD (skill section): Three skill rows in classic Pokemon card style. Each row has TWO lines — a bold name/score line followed by a smaller italic flavor description, exactly like a real Pokemon card attack description:
   Row 1 bold:   "💡 Creativity — 80"
   Row 1 italic: "Dreams up bold new ideas and turns imagination into reality."
   Row 2 bold:   "⚙️ Problem Solving — 90"
   Row 2 italic: "Breaks any challenge into steps and never gives up finding the answer."
   Row 3 bold:   "🤝 Collaboration — 85"
   Row 3 italic: "Makes every teammate better and builds something greater together."
-- ${BANNER_INSTRUCTION}
 
 Style: Bright, playful, collectible. Realistic card shadow like it's sitting on a table. DO NOT add any other text beyond what is listed above.`
   },
@@ -53,20 +50,17 @@ Style: Bright, playful, collectible. Realistic card shadow like it's sitting on 
     id: 'action-figure',
     prompt: `Create a fun action figure toy packaging image, like a collectible you'd find at a toy store — a plastic blister pack (clear bubble) over a colorful cardboard backing. Styled for printing as a 4x6 image.
 
-IMPORTANT: All packaging content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
-
 PACKAGING LAYOUT — follow this exactly:
-- TOP HEADER (cardboard backing, top 15% of image): The text "${PERSON} — FUTURE TECH HERO" in large bold comic/toy font. Use navy blue and gold colors.
+- TOP HEADER (cardboard backing): The text "${PERSON} — FUTURE TECH HERO" in large bold comic/toy font. Use navy blue and gold colors.
 - TOP LEFT CORNER: A circular yellow badge with the text "Career Fair Edition"
 - TOP RIGHT CORNER: The text "${TEACHER}" in small font
 - CENTER (inside the blister pack bubble): A 3D cartoon-style toy figure of the person from the reference photo:
   - Fully enclosed inside a clear plastic bubble/blister pack (visible plastic with light reflections)
   - Smiling and in a confident heroic pose, wearing a fun STEM-themed outfit
   - Accompanied by exactly 3 small accessories inside the bubble: a mini laptop, a small robot, and a backpack
-- SKILL BADGES on the cardboard below the bubble (still inside the top 85%):
+- SKILL BADGES on the cardboard below the bubble:
   Three small colored badges reading: "💡 CREATIVE THINKER"  "⚙️ PROBLEM SOLVER"  "🚀 INNOVATOR"
 - BACKGROUND (cardboard area around bubble): Bright comic-style sunburst rays in blue and gold
-- ${BANNER_INSTRUCTION}
 
 Style: Realistic toy packaging. The plastic bubble must look real — glossy, with reflections. DO NOT add any other text beyond what is listed above.`
   },
@@ -74,27 +68,22 @@ Style: Realistic toy packaging. The plastic bubble must look real — glossy, wi
     id: 'superhero',
     prompt: `Create a superhero comic book cover. It must look like a real printed comic book cover, styled for printing as a 4x6 image.
 
-IMPORTANT: All cover content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
-
 COVER LAYOUT — follow this exactly:
-- TOP TITLE BANNER (top 12% of image): Large bold retro comic lettering: "${PERSON}'s TECH ADVENTURES" — full width, navy blue background, gold letters, thick black outline.
+- TOP TITLE BANNER: Large bold retro comic lettering: "${PERSON}'s TECH ADVENTURES" — full width, navy blue background, gold letters, thick black outline.
 - SMALL TEXT below title: "Career Fair Edition · ${TEACHER}'s Class" — small but readable
 - MAIN ART (center, fills most of the cover): A full-body dynamic illustration of the person from the reference photo as a superhero:
   - Colorful STEM-themed superhero costume (circuit board patterns, glowing blue tech lines)
   - Flying or leaping heroically with fist forward, big smile
   - Dramatic city skyline background with light beams and energy effects
 - SPEECH BUBBLE: "Creativity + Code = SUPERPOWERS!" — large, readable comic speech bubble
-- SKILL STRIP (just above the bottom 15% reserve, inside the art area): Three small comic-style banners: "💡 CREATIVE" · "⚙️ ANALYTICAL" · "🤝 COLLABORATIVE"
-- Issue label (small, bottom right of art area): "ISSUE #1"
-- ${BANNER_INSTRUCTION}
+- SKILL STRIP at the bottom of the art: Three small comic-style banners: "💡 CREATIVE" · "⚙️ ANALYTICAL" · "🤝 COLLABORATIVE"
+- Issue label (small, bottom right): "ISSUE #1"
 
 Style: Bold colors, thick black outlines, Ben-Day dot halftone texture, dynamic action lines. DO NOT add any other text beyond what is listed above.`
   },
   {
     id: 'minecraft',
     prompt: `Create a Minecraft-themed collectible character card. Everything must be rendered in Minecraft's iconic blocky pixel-art style. Styled for printing as a 4x6 image.
-
-IMPORTANT: All card content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 CARD LAYOUT — follow this exactly:
 - TOP HEADER (dark stone-block texture, pixelated): The text "MINECRAFT" in the official Minecraft font (blocky, pixelated, green/white), and below it "CAREER FAIR EDITION" in smaller pixel text
@@ -105,23 +94,22 @@ CARD LAYOUT — follow this exactly:
   - Standing on grass blocks with a blue Minecraft sky
   - Face/hair should match the reference photo as closely as possible in pixel style
 - NAME TAG (floating above character): "${PERSON}" — white text on dark semi-transparent background, pixel font
-- SKILLS PANEL (below character, dark stone UI panel, inside top 85%):
+- SKILLS PANEL (bottom of card, dark stone UI panel):
   - "💡 CREATIVITY: LEVEL 10" — large pixel text
   - "⚙ PROBLEM SOLVING: LEVEL 9" — large pixel text
   - "🤝 TEAMWORK: LEVEL 10" — large pixel text
-- ${BANNER_INSTRUCTION}
 
 Style: Pure Minecraft pixel-art aesthetic. Dark background. Glowing enchantment particle effects around the character. Keep all text LARGE and readable. DO NOT add any other text beyond what is listed above.`
   }
 ];
 
-// Composite the real banner onto the generated image using sharp
+// Extends the image DOWNWARD and draws the sponsor banner in the new space.
+// The AI image is completely untouched — no content ever gets cut off.
 async function compositeBanner(imageBuffer, aaLogoBuffer) {
   const meta = await sharp(imageBuffer).metadata();
   const W = meta.width;
   const H = meta.height;
-  const BANNER_H = Math.round(H * 0.18); // 18% — matches BANNER_INSTRUCTION in prompts
-  const Y = H - BANNER_H;
+  const BANNER_H = Math.round(H * 0.18); // Banner added below — ~18% of original height
   const PAD = Math.round(W * 0.035);
 
   // Logo: left-aligned, 62% of banner height
@@ -132,31 +120,33 @@ async function compositeBanner(imageBuffer, aaLogoBuffer) {
   const aaResizedMeta = await sharp(aaResized).metadata();
   const logoW = aaResizedMeta.width;
   const logoX = PAD;
-  const logoY = Y + Math.round((BANNER_H - logoH) / 2);
+  const logoY = Math.round((BANNER_H - logoH) / 2); // Relative to banner top
 
-  // Text area: starts AFTER logo + gap — never overlaps
+  // Text: starts after logo — can never overlap
   const textLeft = logoX + logoW + PAD;
   const textAreaW = W - PAD - textLeft;
-  const line1Y = Y + Math.round(BANNER_H * 0.35);
-  const line2Y = Y + Math.round(BANNER_H * 0.72);
-
-  // Auto-fit font: "STATESVILLE RD ELEMENTARY" must fit in textAreaW
-  // SVG can't measureText, so estimate: bold Arial ~0.56px per px of font-size per char
-  const chars = 'STATESVILLE RD ELEMENTARY'.length; // 25 chars
+  const chars = 'STATESVILLE RD ELEMENTARY'.length;
   const fontSize = Math.min(Math.round(BANNER_H * 0.30), Math.floor(textAreaW / (chars * 0.56)));
   const fontSize2 = Math.round(fontSize * 0.92);
+  const line1Y = Math.round(BANNER_H * 0.35);
+  const line2Y = Math.round(BANNER_H * 0.72);
 
-  const svgText = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="${Y}" width="${W}" height="${BANNER_H}" fill="#1A3B8C"/>
-    <rect x="0" y="${Y}" width="${W}" height="3" fill="#F5A800"/>
+  // SVG banner strip (just the banner height, not the full image)
+  const bannerSvg = `<svg width="${W}" height="${BANNER_H}" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="${W}" height="${BANNER_H}" fill="#1A3B8C"/>
+    <rect x="0" y="0" width="${W}" height="3" fill="#F5A800"/>
     <text x="${textLeft}" y="${line1Y}" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="start" dominant-baseline="middle">STATESVILLE RD ELEMENTARY</text>
     <text x="${textLeft}" y="${line2Y}" font-family="Arial, sans-serif" font-size="${fontSize2}" font-weight="bold" fill="#F5A800" text-anchor="start" dominant-baseline="middle">CAREER FAIR</text>
   </svg>`;
 
+  const bannerBuffer = await sharp(Buffer.from(bannerSvg)).png().toBuffer();
+
+  // Extend the image downward and composite banner + logo into the new space
   const result = await sharp(imageBuffer)
+    .extend({ bottom: BANNER_H, background: { r: 26, g: 59, b: 140, alpha: 255 } })
     .composite([
-      { input: Buffer.from(svgText), top: 0, left: 0 },
-      { input: aaResized, top: logoY, left: logoX }
+      { input: bannerBuffer, top: H, left: 0 },
+      { input: aaResized, top: H + logoY, left: logoX }
     ])
     .png()
     .toBuffer();
