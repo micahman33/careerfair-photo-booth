@@ -17,6 +17,7 @@ if (!API_KEY) { console.error('Error: OPENAI_API_KEY env var not set.'); process
 
 const PHOTO_PATH = join(__dirname, 'images/demo-source.jpg');
 const AA_PATH    = join(__dirname, 'images/2021-AAI-White.png');
+const SRES_PATH  = join(__dirname, 'images/statesvilleroad.png');
 const OUT_DIR    = join(__dirname, 'images/demos');
 mkdirSync(OUT_DIR, { recursive: true });
 
@@ -104,49 +105,76 @@ Style: Pure Minecraft pixel-art aesthetic. Dark background. Glowing enchantment 
 ];
 
 // Extends the image DOWNWARD and draws the sponsor banner in the new space.
+// Layout: [AA logo left] [STATESVILLE RD / ELEMENTARY / CAREER FAIR centered] [SRES eagle right]
 // The AI image is completely untouched — no content ever gets cut off.
-async function compositeBanner(imageBuffer, aaLogoBuffer) {
+async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
   const meta = await sharp(imageBuffer).metadata();
   const W = meta.width;
   const H = meta.height;
-  const BANNER_H = Math.round(H * 0.18); // Banner added below — ~18% of original height
-  const PAD = Math.round(W * 0.035);
+  const BANNER_H   = Math.round(H * 0.18);
+  const PAD        = Math.round(W * 0.03);
+  const LOGO_MAX_W = Math.round(W * 0.195); // ~200px at 1024w
+  const LOGO_MAX_H = Math.round(BANNER_H * 0.82);
 
-  // Logo: left-aligned, 62% of banner height
-  const logoH = Math.round(BANNER_H * 0.62);
+  // Resize each logo to fit inside LOGO_MAX_W × LOGO_MAX_H (preserve aspect ratio)
   const aaResized = await sharp(aaLogoBuffer)
-    .resize({ height: logoH, fit: 'contain', background: { r: 26, g: 59, b: 140, alpha: 0 } })
-    .toBuffer();
-  const aaResizedMeta = await sharp(aaResized).metadata();
-  const logoW = aaResizedMeta.width;
-  const logoX = PAD;
-  const logoY = Math.round((BANNER_H - logoH) / 2); // Relative to banner top
+    .resize({ width: LOGO_MAX_W, height: LOGO_MAX_H, fit: 'inside', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png().toBuffer();
+  const aaMeta = await sharp(aaResized).metadata();
+  const AA_W = aaMeta.width;
+  const AA_H = aaMeta.height;
 
-  // Text: starts after logo — can never overlap
-  const textLeft = logoX + logoW + PAD;
-  const textAreaW = W - PAD - textLeft;
-  const chars = 'STATESVILLE RD ELEMENTARY'.length;
-  const fontSize = Math.min(Math.round(BANNER_H * 0.30), Math.floor(textAreaW / (chars * 0.56)));
-  const fontSize2 = Math.round(fontSize * 0.92);
-  const line1Y = Math.round(BANNER_H * 0.35);
-  const line2Y = Math.round(BANNER_H * 0.72);
+  const sresResized = await sharp(sresLogoBuffer)
+    .resize({ width: LOGO_MAX_W, height: LOGO_MAX_H, fit: 'inside', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png().toBuffer();
+  const sresMeta = await sharp(sresResized).metadata();
+  const SRES_W = sresMeta.width;
+  const SRES_H = sresMeta.height;
 
-  // SVG banner strip (just the banner height, not the full image)
+  // Positions (relative to banner top)
+  const aaX   = PAD;
+  const aaY   = Math.round((BANNER_H - AA_H)   / 2);
+  const sresX = W - PAD - SRES_W;
+  const sresY = Math.round((BANNER_H - SRES_H) / 2);
+
+  // Text centered between the two logos
+  const textLeft  = aaX + AA_W + PAD;
+  const textRight = sresX - PAD;
+  const textCX    = Math.round((textLeft + textRight) / 2);
+  const textAreaW = textRight - textLeft;
+
+  // Font sizes — approximate char width at ~0.54× font size
+  function fitFontSize(text, maxFs) {
+    let fs = maxFs;
+    while (fs > 10 && text.length * fs * 0.54 > textAreaW) fs--;
+    return fs;
+  }
+  const fs1 = fitFontSize('STATESVILLE RD', Math.round(BANNER_H * 0.26));
+  const fs2 = fitFontSize('ELEMENTARY',     Math.round(BANNER_H * 0.22));
+  const fs3 = Math.round(BANNER_H * 0.19);
+
+  const line1Y = Math.round(BANNER_H * 0.25);
+  const line2Y = Math.round(BANNER_H * 0.52);
+  const line3Y = Math.round(BANNER_H * 0.80);
+
+  // SVG banner strip
   const bannerSvg = `<svg width="${W}" height="${BANNER_H}" xmlns="http://www.w3.org/2000/svg">
     <rect x="0" y="0" width="${W}" height="${BANNER_H}" fill="#1A3B8C"/>
-    <rect x="0" y="0" width="${W}" height="3" fill="#F5A800"/>
-    <text x="${textLeft}" y="${line1Y}" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="start" dominant-baseline="middle">STATESVILLE RD ELEMENTARY</text>
-    <text x="${textLeft}" y="${line2Y}" font-family="Arial, sans-serif" font-size="${fontSize2}" font-weight="bold" fill="#F5A800" text-anchor="start" dominant-baseline="middle">CAREER FAIR</text>
+    <rect x="0" y="0" width="${W}" height="4" fill="#F5A800"/>
+    <text x="${textCX}" y="${line1Y}" font-family="Arial, sans-serif" font-size="${fs1}" font-weight="800" fill="white" text-anchor="middle" dominant-baseline="middle">STATESVILLE RD</text>
+    <text x="${textCX}" y="${line2Y}" font-family="Arial, sans-serif" font-size="${fs2}" font-weight="800" fill="white" text-anchor="middle" dominant-baseline="middle">ELEMENTARY</text>
+    <text x="${textCX}" y="${line3Y}" font-family="Arial, sans-serif" font-size="${fs3}" font-weight="700" fill="#F5A800" text-anchor="middle" dominant-baseline="middle">CAREER FAIR</text>
   </svg>`;
 
   const bannerBuffer = await sharp(Buffer.from(bannerSvg)).png().toBuffer();
 
-  // Extend the image downward and composite banner + logo into the new space
+  // Extend the image downward and composite everything into the new space
   const result = await sharp(imageBuffer)
     .extend({ bottom: BANNER_H, background: { r: 26, g: 59, b: 140, alpha: 255 } })
     .composite([
-      { input: bannerBuffer, top: H, left: 0 },
-      { input: aaResized, top: H + logoY, left: logoX }
+      { input: bannerBuffer, top: H,          left: 0     },
+      { input: aaResized,    top: H + aaY,    left: aaX   },
+      { input: sresResized,  top: H + sresY,  left: sresX },
     ])
     .png()
     .toBuffer();
@@ -154,7 +182,7 @@ async function compositeBanner(imageBuffer, aaLogoBuffer) {
   return result;
 }
 
-async function generateCard(card, photoBuffer, aaBuffer) {
+async function generateCard(card, photoBuffer, aaBuffer, sresBuffer) {
   console.log(`\nGenerating ${card.id}...`);
 
   const form = new FormData();
@@ -181,7 +209,7 @@ async function generateCard(card, photoBuffer, aaBuffer) {
   const rawBuffer = Buffer.from(b64, 'base64');
 
   console.log(`  Compositing banner...`);
-  const finalBuffer = await compositeBanner(rawBuffer, aaBuffer);
+  const finalBuffer = await compositeBanner(rawBuffer, aaBuffer, sresBuffer);
 
   const outPath = join(OUT_DIR, `${card.id}.png`);
   writeFileSync(outPath, finalBuffer);
@@ -191,9 +219,10 @@ async function generateCard(card, photoBuffer, aaBuffer) {
 async function main() {
   const photoBuffer = readFileSync(PHOTO_PATH);
   const aaBuffer    = readFileSync(AA_PATH);
+  const sresBuffer  = readFileSync(SRES_PATH);
 
   for (const card of cards) {
-    await generateCard(card, photoBuffer, aaBuffer);
+    await generateCard(card, photoBuffer, aaBuffer, sresBuffer);
   }
   console.log('\nAll demo cards generated!');
 }

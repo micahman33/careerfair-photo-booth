@@ -188,6 +188,7 @@ Style: Pure Minecraft pixel-art aesthetic. Dark background. Glowing enchantment 
 
 // ===== BANNER COMPOSITING =====
 // Extends the canvas BELOW the AI image and draws the sponsor banner there.
+// Layout: [AA logo left] [STATESVILLE RD / ELEMENTARY / CAREER FAIR centered] [SRES eagle right]
 // The AI image is untouched — no content ever gets covered.
 async function compositeBanner(b64png) {
   return new Promise((resolve, reject) => {
@@ -195,72 +196,110 @@ async function compositeBanner(b64png) {
     img.onload = () => {
       const W = img.width;
       const H = img.height;
-      const BANNER_H = Math.round(H * 0.18); // Banner added below — ~18% of original height
-      const PAD = Math.round(W * 0.035);
+      const BANNER_H  = Math.round(H * 0.18);
+      const PAD       = Math.round(W * 0.03);
+      const LOGO_MAX_W = Math.round(W * 0.195); // ~200px at 1024w
+      const LOGO_MAX_H = Math.round(BANNER_H * 0.82);
 
-      // Canvas is taller: original image + banner strip below
       const canvas = document.createElement('canvas');
-      canvas.width = W;
+      canvas.width  = W;
       canvas.height = H + BANNER_H;
       const ctx = canvas.getContext('2d');
 
       // Draw the full AI image at the top, completely unmodified
       ctx.drawImage(img, 0, 0);
 
-      // Draw navy banner below the image
-      const Y = H; // Banner starts right at the bottom of the original image
+      // Navy banner below the image
+      const Y = H;
       ctx.fillStyle = '#1A3B8C';
       ctx.fillRect(0, Y, W, BANNER_H);
-
-      // Gold separator line at the top of the banner
+      // Gold separator line
       ctx.fillStyle = '#F5A800';
       ctx.fillRect(0, Y, W, 3);
 
-      const aaLogo = new Image();
-      aaLogo.onload = () => {
-        // Logo: left-aligned within banner
-        const logoH = Math.round(BANNER_H * 0.62);
-        const logoW = Math.round(aaLogo.width * (logoH / aaLogo.height));
-        const logoX = PAD;
-        const logoY = Y + Math.round((BANNER_H - logoH) / 2);
-        ctx.drawImage(aaLogo, logoX, logoY, logoW, logoH);
+      // Load both logos in parallel
+      const aaLogo   = new Image();
+      const sresLogo = new Image();
+      let loaded = 0;
 
-        // Text area: starts AFTER the logo — can never overlap
-        const textLeft = logoX + logoW + PAD;
-        const textRight = W - PAD;
+      function onBothLoaded() {
+        // Scale each logo to fit inside LOGO_MAX_W × LOGO_MAX_H (preserve aspect ratio)
+        const aaScale   = Math.min(LOGO_MAX_W / aaLogo.naturalWidth,   LOGO_MAX_H / aaLogo.naturalHeight);
+        const sresScale = Math.min(LOGO_MAX_W / sresLogo.naturalWidth, LOGO_MAX_H / sresLogo.naturalHeight);
+        const AA_W   = Math.round(aaLogo.naturalWidth   * aaScale);
+        const AA_H   = Math.round(aaLogo.naturalHeight  * aaScale);
+        const SRES_W = Math.round(sresLogo.naturalWidth  * sresScale);
+        const SRES_H = Math.round(sresLogo.naturalHeight * sresScale);
+
+        // AA logo: left-aligned, vertically centered
+        const aaX = PAD;
+        const aaY = Y + Math.round((BANNER_H - AA_H) / 2);
+        ctx.drawImage(aaLogo, aaX, aaY, AA_W, AA_H);
+
+        // SRES logo: right-aligned, vertically centered
+        const sresX = W - PAD - SRES_W;
+        const sresY = Y + Math.round((BANNER_H - SRES_H) / 2);
+        ctx.drawImage(sresLogo, sresX, sresY, SRES_W, SRES_H);
+
+        // Text centered in the space between the two logos
+        const textLeft  = aaX + AA_W + PAD;
+        const textRight = sresX - PAD;
+        const textCX    = Math.round((textLeft + textRight) / 2);
         const textAreaW = textRight - textLeft;
 
-        // Auto-shrink font until school name fits
-        let fontSize = Math.round(BANNER_H * 0.30);
-        ctx.font = `800 ${fontSize}px "Segoe UI", Arial, sans-serif`;
-        while (ctx.measureText('STATESVILLE RD ELEMENTARY').width > textAreaW && fontSize > 10) {
-          fontSize--;
-          ctx.font = `800 ${fontSize}px "Segoe UI", Arial, sans-serif`;
+        // Auto-shrink font to fit available width
+        function fitFont(text, maxSize) {
+          let fs = maxSize;
+          ctx.font = `800 ${fs}px "Segoe UI", Arial, sans-serif`;
+          while (ctx.measureText(text).width > textAreaW && fs > 10) {
+            fs--;
+            ctx.font = `800 ${fs}px "Segoe UI", Arial, sans-serif`;
+          }
+          return fs;
         }
 
-        ctx.fillStyle = '#FFFFFF';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('STATESVILLE RD ELEMENTARY', textLeft, Y + BANNER_H * 0.35);
+        const fs1 = fitFont('STATESVILLE RD', Math.round(BANNER_H * 0.26));
+        const fs2 = fitFont('ELEMENTARY',     Math.round(BANNER_H * 0.22));
+        const fs3 = Math.round(BANNER_H * 0.19);
 
-        const fontSize2 = Math.round(fontSize * 0.92);
-        ctx.font = `800 ${fontSize2}px "Segoe UI", Arial, sans-serif`;
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = `800 ${fs1}px "Segoe UI", Arial, sans-serif`;
+        ctx.fillText('STATESVILLE RD', textCX, Y + BANNER_H * 0.25);
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = `800 ${fs2}px "Segoe UI", Arial, sans-serif`;
+        ctx.fillText('ELEMENTARY', textCX, Y + BANNER_H * 0.52);
+
         ctx.fillStyle = '#F5A800';
-        ctx.fillText('CAREER FAIR', textLeft, Y + BANNER_H * 0.72);
+        ctx.font = `700 ${fs3}px "Segoe UI", Arial, sans-serif`;
+        ctx.fillText('CAREER FAIR', textCX, Y + BANNER_H * 0.80);
 
         resolve(canvas.toDataURL('image/png'));
-      };
-      aaLogo.onerror = () => {
-        // Fallback: centered text if logo fails to load
-        const fontSize = Math.round(BANNER_H * 0.24);
+      }
+
+      function onLoad() { if (++loaded === 2) onBothLoaded(); }
+      function onError() {
+        // Fallback: text only if logos fail to load
+        const fs = Math.round(BANNER_H * 0.22);
         ctx.fillStyle = '#FFFFFF';
-        ctx.font = `700 ${fontSize}px "Segoe UI", Arial, sans-serif`;
+        ctx.font = `700 ${fs}px "Segoe UI", Arial, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('AUTOMATION ANYWHERE  ·  STATESVILLE RD ELEMENTARY CAREER FAIR', W / 2, Y + BANNER_H / 2);
+        ctx.fillText('STATESVILLE RD ELEMENTARY', W / 2, Y + BANNER_H * 0.38);
+        ctx.fillStyle = '#F5A800';
+        ctx.fillText('CAREER FAIR', W / 2, Y + BANNER_H * 0.72);
         resolve(canvas.toDataURL('image/png'));
-      };
-      aaLogo.src = 'images/2021-AAI-White.png';
+      }
+
+      aaLogo.onload    = onLoad;
+      sresLogo.onload  = onLoad;
+      aaLogo.onerror   = onError;
+      sresLogo.onerror = onError;
+      aaLogo.src   = 'images/2021-AAI-White.png';
+      sresLogo.src = 'images/statesvilleroad.png';
     };
     img.onerror = reject;
     img.src = `data:image/png;base64,${b64png}`;
