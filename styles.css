@@ -25,11 +25,15 @@
   padding: 0;
 }
 
+html, body {
+  height: 100%;
+}
+
 body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: var(--gold-bg);
   color: var(--text);
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -37,8 +41,8 @@ body {
 /* ===== HEADER ===== */
 header {
   background: var(--navy);
-  padding: 0.75rem 1rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  padding: 1rem 1.5rem;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.30);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -48,19 +52,20 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  max-width: 480px;
+  gap: 1rem;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
 .logo-school {
-  width: 48px;
-  height: 48px;
+  width: 72px;
+  height: 72px;
   object-fit: contain;
   border-radius: 50%;
   background: white;
-  padding: 3px;
+  padding: 4px;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .header-center {
@@ -70,25 +75,25 @@ header {
 
 .header-title {
   color: var(--gold);
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 800;
   line-height: 1.2;
-  white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
 .header-sub {
-  color: rgba(255,255,255,0.65);
-  font-size: 0.65rem;
-  margin-top: 2px;
-  white-space: nowrap;
+  color: rgba(255,255,255,0.70);
+  font-size: 0.82rem;
+  margin-top: 3px;
+  font-weight: 500;
 }
 
 .logo-aa {
-  height: 26px;
+  height: 44px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 /* ===== PROGRESS BAR ===== */
@@ -96,7 +101,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.85rem 2rem;
+  padding: 1rem 2rem;
   background: var(--white);
   border-bottom: 1px solid var(--gray-200);
   box-shadow: var(--shadow-sm);
@@ -106,28 +111,28 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .progress-num {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 2px solid var(--gray-400);
+  border: 2.5px solid var(--gray-400);
   background: var(--white);
   color: var(--gray-600);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .progress-label {
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   color: var(--gray-600);
-  font-weight: 500;
+  font-weight: 600;
   transition: color 0.3s;
   white-space: nowrap;
 }
@@ -136,12 +141,12 @@ header {
   background: var(--gold);
   border-color: var(--gold);
   color: var(--navy);
-  box-shadow: 0 0 0 4px rgba(245,168,0,0.20);
+  box-shadow: 0 0 0 5px rgba(245,168,0,0.22);
 }
 
 .progress-step.active .progress-label {
   color: var(--navy);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .progress-step.done .progress-num {
@@ -156,11 +161,11 @@ header {
 
 .progress-line {
   flex: 1;
-  height: 2px;
+  height: 3px;
   background: var(--gray-200);
-  min-width: 36px;
-  max-width: 80px;
-  margin-bottom: 18px;
+  min-width: 48px;
+  max-width: 100px;
+  margin-bottom: 20px;
   transition: background 0.4s;
 }
 
@@ -172,46 +177,64 @@ header {
 main {
   flex: 1;
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 1.5rem 1rem 3rem;
+  /* No global max-width — each step controls its own layout */
 }
 
 /* ===== STEP ===== */
+.step {
+  width: 100%;
+}
+
+/* Step 1 (camera) fills the full width */
+#step-1 {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+/* Steps 2 & 3 are form/result — constrained for readability */
+#step-2,
+#step-3 {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem 3rem;
+}
+
 .step > h2,
 .section-title {
-  font-size: 1.25rem;
+  font-size: 1.6rem;
   color: var(--navy);
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+  font-weight: 800;
+  margin-bottom: 0.6rem;
 }
 
 .section-title {
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
 }
 
 .step-hint {
   color: var(--gray-600);
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 /* ===== CAMERA ===== */
 .camera-row {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  align-items: stretch;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .camera-frame {
   position: relative;
   flex: 1;
   aspect-ratio: 4 / 3;
+  /* Cap height so it doesn't overflow the viewport */
+  max-height: calc(100svh - 230px);
+  min-height: 260px;
   background: #111;
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.35);
   min-width: 0;
 }
 
@@ -230,12 +253,12 @@ main {
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: clamp(80px, 20vw, 160px);
+  font-size: clamp(100px, 22vw, 200px);
   font-weight: 900;
   z-index: 10;
 }
 
-/* Full-page flash — now outside camera frame */
+/* Full-page flash — outside camera frame */
 #flash-overlay {
   position: fixed;
   inset: 0;
@@ -253,78 +276,83 @@ main {
 }
 
 .btn-capture {
-  width: 84px;
-  height: 110px;
+  width: 100px;
+  height: 140px;
   border-radius: var(--radius-md);
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 800;
   line-height: 1.6;
   flex-direction: column;
-  padding: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  font-size: 0.9rem;
 }
 
 .no-camera-msg {
   background: var(--gray-100);
   border: 2px dashed var(--gray-400);
   border-radius: var(--radius-md);
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 2rem;
   text-align: center;
   color: var(--gray-600);
   margin-bottom: 1rem;
-  line-height: 1.9;
-  font-size: 0.95rem;
+  line-height: 2;
+  font-size: 1.05rem;
 }
 
 /* ===== PHOTO PREVIEW ===== */
 .photo-taken-wrap {
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.20);
+  max-height: calc(100svh - 230px);
 }
 
 .photo-taken {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
+  max-height: inherit;
 }
 
 .photo-badge {
   position: absolute;
-  bottom: 0.85rem;
+  bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
   background: var(--gold);
   color: var(--navy);
-  font-weight: 700;
-  font-size: 0.9rem;
-  padding: 0.35rem 1.1rem;
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 0.45rem 1.4rem;
   border-radius: 100px;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
 }
 
 /* ===== FORM FIELDS ===== */
 .field {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .field label {
   display: block;
   font-weight: 700;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: var(--navy);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.7px;
 }
 
 .field input {
   width: 100%;
-  padding: 0.9rem 1rem;
+  padding: 1rem 1.25rem;
   border: 2px solid var(--gray-200);
   border-radius: var(--radius-sm);
-  font-size: 1rem;
+  font-size: 1.15rem;
   color: var(--text);
   background: var(--white);
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -341,8 +369,8 @@ main {
 .card-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-  margin: 0.75rem 0 1.5rem;
+  gap: 1rem;
+  margin: 1rem 0 1.75rem;
 }
 
 .card-opt {
@@ -367,7 +395,7 @@ main {
 
 .card-opt.selected {
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(245,168,0,0.35);
+  box-shadow: 0 0 0 4px rgba(245,168,0,0.35);
 }
 
 .card-opt-preview {
@@ -380,8 +408,8 @@ main {
 
 .card-opt-name {
   width: 100%;
-  padding: 0.5rem 0.4rem;
-  font-size: 0.75rem;
+  padding: 0.6rem 0.5rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--navy);
   text-align: center;
@@ -394,96 +422,15 @@ main {
   color: var(--navy);
 }
 
-/* ===== DEMO GALLERY ===== */
-.demo-section {
-  margin-top: 1.25rem;
-  border-top: 1px solid var(--gray-200);
-  padding-top: 1rem;
-}
-
-.demo-toggle {
-  background: none;
-  border: none;
-  color: var(--navy);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: inherit;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.demo-toggle:hover { color: var(--gold); }
-
-.demo-arrow {
-  transition: transform 0.2s;
-  display: inline-block;
-}
-
-.demo-toggle.open .demo-arrow {
-  transform: rotate(180deg);
-}
-
-.demo-gallery {
-  margin-top: 0.85rem;
-}
-
-.demo-scroll {
-  display: flex;
-  gap: 0.65rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.demo-scroll::-webkit-scrollbar { display: none; }
-
-.demo-item {
-  flex-shrink: 0;
-  width: 110px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  cursor: pointer;
-}
-
-.demo-item img {
-  width: 100%;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
-  border: 2px solid var(--gray-200);
-  transition: transform 0.15s, border-color 0.15s;
-  aspect-ratio: 2/3;
-  object-fit: cover;
-  background: var(--gray-100);
-}
-
-.demo-item img:hover {
-  transform: scale(1.04);
-  border-color: var(--gold);
-}
-
-.demo-item span {
-  font-size: 0.65rem;
-  color: var(--gray-600);
-  font-weight: 600;
-  text-align: center;
-}
-
 /* ===== BUTTONS ===== */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  padding: 0.8rem 1.5rem;
+  padding: 0.9rem 1.75rem;
   border-radius: 100px;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, transform 0.1s, box-shadow 0.2s;
@@ -501,12 +448,12 @@ main {
   background: var(--gold);
   color: var(--navy);
   border-color: var(--gold);
-  box-shadow: 0 2px 8px rgba(245,168,0,0.35);
+  box-shadow: 0 2px 10px rgba(245,168,0,0.40);
 }
 
 .btn-gold:hover:not(:disabled) {
   background: var(--gold-light);
-  box-shadow: 0 4px 12px rgba(245,168,0,0.45);
+  box-shadow: 0 4px 14px rgba(245,168,0,0.50);
 }
 
 .btn-gold:disabled {
@@ -529,8 +476,9 @@ main {
 }
 
 .btn-xl {
-  font-size: 1.15rem;
-  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  padding: 1.1rem 2.25rem;
+  font-weight: 800;
 }
 
 .btn-grow {
@@ -539,7 +487,7 @@ main {
 
 .btn-row {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.85rem;
   align-items: center;
 }
 
@@ -561,13 +509,13 @@ main {
 }
 
 .loading-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: var(--navy);
 }
 
 .progress-message {
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--gray-600);
   font-weight: 500;
   text-align: center;
@@ -761,14 +709,14 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   padding: 0.5rem 0 1rem;
 }
 
 #result-state h2 {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   color: var(--navy);
-  font-weight: 700;
+  font-weight: 800;
   text-align: center;
 }
 
@@ -781,7 +729,7 @@ main {
 
 .download-hint {
   color: var(--gray-600);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-align: center;
 }
 
@@ -790,7 +738,7 @@ main {
   background: #fff0f0;
   border: 2px solid #ffb3b3;
   border-radius: var(--radius-md);
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 2rem;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -801,7 +749,7 @@ main {
 
 .error-msg {
   color: #c62828;
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.6;
 }
 
@@ -810,7 +758,17 @@ footer {
   background: var(--navy);
   color: rgba(255,255,255,0.65);
   text-align: center;
-  padding: 1rem;
-  font-size: 0.78rem;
+  padding: 1.1rem;
+  font-size: 0.8rem;
   margin-top: auto;
+}
+
+/* ===== RESPONSIVE: narrow phones ===== */
+@media (max-width: 480px) {
+  header { padding: 0.85rem 1rem; }
+  .logo-school { width: 56px; height: 56px; }
+  .header-title { font-size: 1.1rem; }
+  .logo-aa { height: 34px; }
+  #step-1 { padding: 0.85rem; }
+  .btn-capture { width: 86px; height: 120px; }
 }
