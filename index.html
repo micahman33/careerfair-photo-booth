@@ -9,12 +9,14 @@
 <body>
 
   <header>
-    <img src="images/statesvilleroad.png" alt="SRES" class="logo-school">
-    <div class="header-center">
-      <div class="header-title">Career Day AI Photo Booth</div>
-      <div class="header-sub">Statesville Rd Elementary × Automation Anywhere</div>
+    <div class="header-inner">
+      <img src="images/statesvilleroad.png" alt="SRES" class="logo-school">
+      <div class="header-center">
+        <div class="header-title">Career Day AI Photo Booth</div>
+        <div class="header-sub">Statesville Rd Elementary × Automation Anywhere</div>
+      </div>
+      <img src="images/2021-AAI-White.png" alt="Automation Anywhere" class="logo-aa">
     </div>
-    <img src="images/2021-AAI-White.png" alt="Automation Anywhere" class="logo-aa">
   </header>
 
   <!-- Progress Indicator -->
@@ -57,6 +59,34 @@
         <button class="btn btn-gold btn-xl" id="capture-btn">📸 Take Photo</button>
       </div>
 
+      <div class="demo-section">
+        <button class="demo-toggle" id="demo-toggle">✨ See example cards <span class="demo-arrow">▾</span></button>
+        <div class="demo-gallery" id="demo-gallery" hidden>
+          <div class="demo-scroll">
+            <div class="demo-item">
+              <img src="images/demos/pokemon.png" alt="Pokémon Card example" loading="lazy">
+              <span>⚡ Pokémon Card</span>
+            </div>
+            <div class="demo-item">
+              <img src="images/demos/action-figure.png" alt="Action Figure example" loading="lazy">
+              <span>🚀 Action Figure</span>
+            </div>
+            <div class="demo-item">
+              <img src="images/demos/superhero.png" alt="Superhero Comic example" loading="lazy">
+              <span>🦸 Superhero Comic</span>
+            </div>
+            <div class="demo-item">
+              <img src="images/demos/sports.png" alt="Sports Card example" loading="lazy">
+              <span>🏅 Sports Card</span>
+            </div>
+            <div class="demo-item">
+              <img src="images/demos/minecraft.png" alt="Minecraft Card example" loading="lazy">
+              <span>🧱 Minecraft Card</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="preview-actions" hidden>
         <div class="photo-taken-wrap">
           <img id="preview-img" class="photo-taken" alt="Your photo">
@@ -85,24 +115,29 @@
       <h2 class="section-title">Choose Your Card Type</h2>
       <div class="card-grid" id="card-grid">
         <button class="card-opt selected" data-value="trading-card">
-          <span class="card-opt-icon">🃏</span>
+          <span class="card-opt-icon">⚡</span>
           <span class="card-opt-name">Pokémon Card</span>
+          <span class="card-opt-tag">Level up your future!</span>
         </button>
         <button class="card-opt" data-value="action-figure">
-          <span class="card-opt-icon">🤖</span>
+          <span class="card-opt-icon">🚀</span>
           <span class="card-opt-name">Action Figure</span>
+          <span class="card-opt-tag">Blast off to success!</span>
         </button>
         <button class="card-opt" data-value="superhero-comic">
-          <span class="card-opt-icon">💥</span>
+          <span class="card-opt-icon">🦸</span>
           <span class="card-opt-name">Superhero Comic</span>
+          <span class="card-opt-tag">Your powers are real!</span>
         </button>
         <button class="card-opt" data-value="sports-card">
-          <span class="card-opt-icon">🏆</span>
+          <span class="card-opt-icon">🏅</span>
           <span class="card-opt-name">Sports Card</span>
+          <span class="card-opt-tag">Champions keep learning!</span>
         </button>
         <button class="card-opt" data-value="minecraft-card">
-          <span class="card-opt-icon">⛏️</span>
+          <span class="card-opt-icon">🧱</span>
           <span class="card-opt-name">Minecraft Card</span>
+          <span class="card-opt-tag">Build something amazing!</span>
         </button>
       </div>
 

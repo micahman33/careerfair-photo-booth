@@ -13,3 +13,6 @@ gcp-serviceaccounts-keys-sa-photobooth-app-storage.json
 
 # Node
 node_modules/
+
+# Demo source photo (not committed — run generate-demos.js locally)
+images/demo-source.jpg
