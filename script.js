@@ -277,7 +277,7 @@ async function compositeBanner(b64png) {
         ctx.font = `700 ${fs3}px "Segoe UI", Arial, sans-serif`;
         ctx.fillText('CAREER FAIR', textCX, Y + BANNER_H * 0.80);
 
-        resolve(canvas.toDataURL('image/png'));
+        resolve(canvas.toDataURL('image/jpeg', 0.88));
       }
 
       function onLoad() { if (++loaded === 2) onBothLoaded(); }
@@ -291,7 +291,7 @@ async function compositeBanner(b64png) {
         ctx.fillText('STATESVILLE RD ELEMENTARY', W / 2, Y + BANNER_H * 0.38);
         ctx.fillStyle = '#F5A800';
         ctx.fillText('CAREER FAIR', W / 2, Y + BANNER_H * 0.72);
-        resolve(canvas.toDataURL('image/png'));
+        resolve(canvas.toDataURL('image/jpeg', 0.88));
       }
 
       aaLogo.onload    = onLoad;
@@ -400,7 +400,7 @@ async function generateCard() {
     // Auto-download
     const a = document.createElement('a');
     a.href = finalImgSrc;
-    a.download = `${filename}.png`;
+    a.download = `${filename}.jpg`;
     a.click();
 
   } catch (err) {
