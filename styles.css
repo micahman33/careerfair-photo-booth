@@ -25,6 +25,13 @@
   padding: 0;
 }
 
+/*
+  IMPORTANT: Never use plain `display: X` on elements that are toggled via
+  the HTML `hidden` attribute. Author CSS beats UA [hidden]{display:none},
+  so the element stays visible. Always use `:not([hidden]) { display: X }`
+  for those elements.
+*/
+
 html, body {
   height: 100%;
 }
@@ -33,18 +40,20 @@ body {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: var(--gold-bg);
   color: var(--text);
-  min-height: 100%;
+  /* Flex column so header/progress/main/footer stack and main grows */
   display: flex;
   flex-direction: column;
+  /* Prevent outer page scroll — each step manages its own scroll */
+  overflow: hidden;
 }
 
 /* ===== HEADER ===== */
 header {
+  flex-shrink: 0;
   background: var(--navy);
   padding: 1rem 1.5rem;
   box-shadow: 0 3px 16px rgba(0,0,0,0.30);
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 100;
 }
 
@@ -53,7 +62,7 @@ header {
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -98,10 +107,11 @@ header {
 
 /* ===== PROGRESS BAR ===== */
 .progress-bar {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2rem;
+  padding: 0.9rem 2rem;
   background: var(--white);
   border-bottom: 1px solid var(--gray-200);
   box-shadow: var(--shadow-sm);
@@ -173,69 +183,58 @@ header {
   background: var(--navy);
 }
 
-/* ===== MAIN ===== */
+/* ===== MAIN — fills all remaining space ===== */
 main {
   flex: 1;
-  width: 100%;
-  /* No global max-width — each step controls its own layout */
-}
-
-/* ===== STEP ===== */
-.step {
+  min-height: 0;            /* Required for flex children to shrink properly */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;         /* Each step scrolls internally */
   width: 100%;
 }
 
-/* Step 1 (camera) fills the full width */
-#step-1 {
-  padding: 1.25rem 1.5rem 1.5rem;
+/* ===== STEP 1: CAMERA — fills the viewport, no scroll ===== */
+#step-1:not([hidden]) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0.85rem 1.25rem 0.75rem;
+  gap: 0.5rem;
 }
 
-/* Steps 2 & 3 are form/result — constrained for readability */
-#step-2,
-#step-3 {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 1.75rem 1.5rem 3rem;
-}
-
-.step > h2,
-.section-title {
-  font-size: 1.6rem;
+#step-1 > h2 {
+  flex-shrink: 0;
+  font-size: 1.4rem;
   color: var(--navy);
   font-weight: 800;
-  margin-bottom: 0.6rem;
 }
 
-.section-title {
-  margin-top: 1.75rem;
-}
-
-.step-hint {
+#step-1 > .step-hint {
+  flex-shrink: 0;
   color: var(--gray-600);
-  font-size: 1rem;
-  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
 }
 
-/* ===== CAMERA ===== */
-.camera-row {
+/* Camera row: fills all remaining space in step-1 */
+/* NOTE: Use :not([hidden]) so the flex display doesn't override [hidden] */
+.camera-row:not([hidden]) {
+  flex: 1;
+  min-height: 0;
   display: flex;
   align-items: stretch;
   gap: 1rem;
-  margin-bottom: 1.25rem;
 }
 
 .camera-frame {
-  position: relative;
   flex: 1;
-  aspect-ratio: 4 / 3;
-  /* Cap height so it doesn't overflow the viewport */
-  max-height: calc(100svh - 230px);
-  min-height: 260px;
+  min-height: 0;
   background: #111;
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: 0 6px 28px rgba(0,0,0,0.35);
-  min-width: 0;
+  position: relative;
 }
 
 #video {
@@ -253,12 +252,12 @@ main {
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: clamp(100px, 22vw, 200px);
+  font-size: clamp(100px, 18vw, 200px);
   font-weight: 900;
   z-index: 10;
 }
 
-/* Full-page flash — outside camera frame */
+/* Full-page flash — outside camera frame, fixed over everything */
 #flash-overlay {
   position: fixed;
   inset: 0;
@@ -279,7 +278,6 @@ main {
   width: 100px;
   height: 140px;
   border-radius: var(--radius-md);
-  font-size: 1rem;
   font-weight: 800;
   line-height: 1.6;
   flex-direction: column;
@@ -287,26 +285,39 @@ main {
   font-size: 0.9rem;
 }
 
-.no-camera-msg {
+/* No-camera message: fills same space as camera-row when camera is unavailable */
+#no-camera-msg:not([hidden]) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--gray-100);
   border: 2px dashed var(--gray-400);
   border-radius: var(--radius-md);
-  padding: 2.5rem 2rem;
   text-align: center;
   color: var(--gray-600);
-  margin-bottom: 1rem;
   line-height: 2;
-  font-size: 1.05rem;
+  font-size: 1rem;
+  padding: 2rem;
 }
 
-/* ===== PHOTO PREVIEW ===== */
+/* Photo preview: fills same space as camera-row */
+#preview-actions:not([hidden]) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .photo-taken-wrap {
+  flex: 1;
+  min-height: 0;
   position: relative;
-  margin-bottom: 1.25rem;
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: 0 6px 28px rgba(0,0,0,0.20);
-  max-height: calc(100svh - 230px);
 }
 
 .photo-taken {
@@ -314,7 +325,6 @@ main {
   height: 100%;
   object-fit: cover;
   display: block;
-  max-height: inherit;
 }
 
 .photo-badge {
@@ -330,6 +340,35 @@ main {
   border-radius: 100px;
   white-space: nowrap;
   box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+
+/* ===== STEPS 2 & 3 — constrained width, internal scroll ===== */
+#step-2:not([hidden]),
+#step-3:not([hidden]) {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem 3rem;
+  /* Ensures the scrollable area aligns left on wide screens */
+  align-self: center;
+}
+
+/* Step headings (steps 2 & 3) */
+#step-2 h2,
+#step-3 h2,
+.section-title {
+  font-size: 1.5rem;
+  color: var(--navy);
+  font-weight: 800;
+  margin-bottom: 0.6rem;
+}
+
+.section-title {
+  margin-top: 1.75rem;
 }
 
 /* ===== FORM FIELDS ===== */
@@ -486,6 +525,7 @@ main {
 }
 
 .btn-row {
+  flex-shrink: 0;
   display: flex;
   gap: 0.85rem;
   align-items: center;
@@ -503,7 +543,7 @@ main {
   gap: 1.5rem;
 }
 
-/* Use :not([hidden]) so display:flex only applies when visible */
+/* :not([hidden]) so display:flex only applies when visible */
 #loading-overlay:not([hidden]) {
   display: flex;
 }
@@ -705,7 +745,8 @@ main {
 }
 
 /* ===== RESULT ===== */
-#result-state {
+/* Use :not([hidden]) so display:flex doesn't override the [hidden] attribute */
+#result-state:not([hidden]) {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -734,6 +775,10 @@ main {
 }
 
 /* ===== ERROR ===== */
+#error-state:not([hidden]) {
+  display: block;
+}
+
 .error-box {
   background: #fff0f0;
   border: 2px solid #ffb3b3;
@@ -747,6 +792,10 @@ main {
   margin-top: 1rem;
 }
 
+.error-title {
+  font-size: 2rem;
+}
+
 .error-msg {
   color: #c62828;
   font-size: 1.05rem;
@@ -755,20 +804,20 @@ main {
 
 /* ===== FOOTER ===== */
 footer {
+  flex-shrink: 0;
   background: var(--navy);
   color: rgba(255,255,255,0.65);
   text-align: center;
-  padding: 1.1rem;
-  font-size: 0.8rem;
-  margin-top: auto;
+  padding: 0.85rem;
+  font-size: 0.78rem;
 }
 
 /* ===== RESPONSIVE: narrow phones ===== */
 @media (max-width: 480px) {
-  header { padding: 0.85rem 1rem; }
+  header { padding: 0.75rem 1rem; }
   .logo-school { width: 56px; height: 56px; }
   .header-title { font-size: 1.1rem; }
   .logo-aa { height: 34px; }
-  #step-1 { padding: 0.85rem; }
-  .btn-capture { width: 86px; height: 120px; }
+  #step-1:not([hidden]) { padding: 0.6rem 0.75rem 0.5rem; }
+  .btn-capture { width: 84px; height: 120px; }
 }

@@ -14,8 +14,8 @@ async function initCamera() {
     video.srcObject = videoStream;
   } catch (err) {
     console.error('Camera error:', err);
-    document.getElementById('camera-frame').hidden = true;
-    document.getElementById('camera-actions').hidden = true;
+    // Hide the whole camera row so no-camera-msg can fill the flex space
+    document.getElementById('camera-row').hidden = true;
     document.getElementById('no-camera-msg').hidden = false;
   }
 }
@@ -356,9 +356,13 @@ async function generateCard() {
   } catch (err) {
     console.error('Generation error:', err);
     hideLoadingOverlay();
+    // Make sure result-state is hidden (belt-and-suspenders)
+    document.getElementById('result-state').hidden = true;
+    document.getElementById('result-image').src = '';
+    // Show error on step 3
     goToStep(3);
     document.getElementById('error-text').textContent =
-      `😞 ${err.message || 'Something went wrong. Please try again.'}`;
+      err.message || 'Something went wrong. Please try again.';
     document.getElementById('error-state').hidden = false;
   }
 }

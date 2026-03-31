@@ -6,6 +6,11 @@
   "engines": {
     "node": ">=18"
   },
+  "scripts": {
+    "test": "node test/smoke-test.js",
+    "test:deployed": "node test/smoke-test.js https://photo-booth-rust-chi.vercel.app",
+    "test:full": "node test/smoke-test.js https://photo-booth-rust-chi.vercel.app --full"
+  },
   "dependencies": {
     "sharp": "^0.34.5"
   }
