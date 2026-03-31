@@ -103,40 +103,48 @@
 
     <!-- ===== STEP 2: DETAILS ===== -->
     <div class="step" id="step-2" hidden>
-      <h2>Your Details</h2>
+      <div class="step2-cols">
 
-      <div class="field">
-        <label for="personName">Your First Name</label>
-        <input type="text" id="personName" placeholder="e.g. Alex" maxlength="30" autocomplete="off" autocorrect="off">
-      </div>
-      <div class="field">
-        <label for="teacherName">Your Teacher's Name</label>
-        <input type="text" id="teacherName" placeholder="e.g. Ms. Johnson" maxlength="40" autocomplete="off" autocorrect="off">
-      </div>
+        <!-- LEFT: form -->
+        <div class="step2-left">
+          <h2>Your Details</h2>
+          <div class="field">
+            <label for="personName">Your First Name</label>
+            <input type="text" id="personName" placeholder="e.g. Alex" maxlength="30" autocomplete="off" autocorrect="off">
+          </div>
+          <div class="field">
+            <label for="teacherName">Your Teacher's Name</label>
+            <input type="text" id="teacherName" placeholder="e.g. Ms. Johnson" maxlength="40" autocomplete="off" autocorrect="off">
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-outline" id="back-btn-2">← Back</button>
+            <button class="btn btn-gold btn-xl btn-grow" id="generate-btn" disabled>✨ Generate!</button>
+          </div>
+        </div>
 
-      <h2 class="section-title">Choose Your Card Type</h2>
-      <div class="card-grid" id="card-grid">
-        <button class="card-opt selected" data-value="trading-card">
-          <img src="images/demos/pokemon.png" alt="Pokémon Card" class="card-opt-preview">
-          <span class="card-opt-name">⚡ Pokémon Card</span>
-        </button>
-        <button class="card-opt" data-value="action-figure">
-          <img src="images/demos/action-figure.png" alt="Action Figure" class="card-opt-preview">
-          <span class="card-opt-name">🚀 Action Figure</span>
-        </button>
-        <button class="card-opt" data-value="superhero-comic">
-          <img src="images/demos/superhero.png" alt="Superhero Comic" class="card-opt-preview">
-          <span class="card-opt-name">🦸 Superhero Comic</span>
-        </button>
-        <button class="card-opt" data-value="minecraft-card">
-          <img src="images/demos/minecraft.png" alt="Minecraft Card" class="card-opt-preview">
-          <span class="card-opt-name">🧱 Minecraft Card</span>
-        </button>
-      </div>
+        <!-- RIGHT: card picker -->
+        <div class="step2-right">
+          <h2>Choose Your Card</h2>
+          <div class="card-grid" id="card-grid">
+            <button class="card-opt selected" data-value="trading-card">
+              <img src="images/demos/pokemon.png" alt="Pokémon Card" class="card-opt-preview">
+              <span class="card-opt-name">⚡ Pokémon Card</span>
+            </button>
+            <button class="card-opt" data-value="action-figure">
+              <img src="images/demos/action-figure.png" alt="Action Figure" class="card-opt-preview">
+              <span class="card-opt-name">🚀 Action Figure</span>
+            </button>
+            <button class="card-opt" data-value="superhero-comic">
+              <img src="images/demos/superhero.png" alt="Superhero Comic" class="card-opt-preview">
+              <span class="card-opt-name">🦸 Superhero</span>
+            </button>
+            <button class="card-opt" data-value="minecraft-card">
+              <img src="images/demos/minecraft.png" alt="Minecraft Card" class="card-opt-preview">
+              <span class="card-opt-name">🧱 Minecraft</span>
+            </button>
+          </div>
+        </div>
 
-      <div class="btn-row">
-        <button class="btn btn-outline" id="back-btn-2">← Back</button>
-        <button class="btn btn-gold btn-xl btn-grow" id="generate-btn" disabled>✨ Generate!</button>
       </div>
     </div>
 

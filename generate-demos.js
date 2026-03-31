@@ -16,20 +16,20 @@ const API_KEY = process.env.OPENAI_API_KEY;
 if (!API_KEY) { console.error('Error: OPENAI_API_KEY env var not set.'); process.exit(1); }
 
 const PHOTO_PATH = join(__dirname, 'images/demo-source.jpg');
-const AA_PATH    = join(__dirname, 'images/AAI standard.png');
+const AA_PATH    = join(__dirname, 'images/2021-AAI-White.png');
 const OUT_DIR    = join(__dirname, 'images/demos');
 mkdirSync(OUT_DIR, { recursive: true });
 
 const PERSON  = 'Micah';
 const TEACHER = 'Ms. Smith';
-const BANNER_INSTRUCTION = `BOTTOM BANNER ZONE (the bottom 15% of the full image height): This entire strip must be a solid flat navy blue (#1A3B8C) rectangle with absolutely NO text, NO logos, NO artwork, and NO decorations of any kind. All card content (borders, art, stats, text) must be fully contained within the top 85% of the image. This zone will be replaced in post-production.`;
+const BANNER_INSTRUCTION = `BOTTOM BANNER ZONE (the bottom 18% of the full image height): This entire strip must be a solid flat navy blue (#1A3B8C) rectangle with absolutely NO text, NO logos, NO artwork, and NO decorations of any kind. All card content (borders, art, stats, text) must be fully contained within the top 82% of the image. This zone will be replaced in post-production.`;
 
 const cards = [
   {
     id: 'pokemon',
     prompt: `Create a fun, ultra-rare Pokemon-style trading card. The image must look like a real physical trading card, perfectly centered, styled for printing as a 4x6 image.
 
-IMPORTANT: All card content must fit within the TOP 85% of the image. The bottom 15% is reserved (see below).
+IMPORTANT: All card content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 CARD LAYOUT — follow this exactly:
 - GOLD/YELLOW outer border (thick, like a real Pokemon card)
@@ -38,10 +38,13 @@ CARD LAYOUT — follow this exactly:
 - TOP RIGHT: "300 HP" in large bold Pokemon-style font
 - TOP RIGHT below that: A gold star badge reading "Ultra Rare"
 - CENTER (main art area): An anime/manga-style illustration of the person from the reference photo. Make them look like a friendly anime kid character, smiling. Bright colorful background with sparkles and energy bursts.
-- LOWER CARD (skill section, inside the top 85%): Three skill rows in classic Pokemon card style, each on its own line with LARGE, clearly readable text:
-  Row 1: "💡 Creativity — 80"
-  Row 2: "⚙️ Problem Solving — 90"
-  Row 3: "🤝 Collaboration — 85"
+- LOWER CARD (skill section, inside top 82%): Three skill rows in classic Pokemon card style. Each row has TWO lines — a bold name/score line followed by a smaller italic flavor description, exactly like a real Pokemon card attack description:
+  Row 1 bold:   "💡 Creativity — 80"
+  Row 1 italic: "Dreams up bold new ideas and turns imagination into reality."
+  Row 2 bold:   "⚙️ Problem Solving — 90"
+  Row 2 italic: "Breaks any challenge into steps and never gives up finding the answer."
+  Row 3 bold:   "🤝 Collaboration — 85"
+  Row 3 italic: "Makes every teammate better and builds something greater together."
 - ${BANNER_INSTRUCTION}
 
 Style: Bright, playful, collectible. Realistic card shadow like it's sitting on a table. DO NOT add any other text beyond what is listed above.`
@@ -50,7 +53,7 @@ Style: Bright, playful, collectible. Realistic card shadow like it's sitting on 
     id: 'action-figure',
     prompt: `Create a fun action figure toy packaging image, like a collectible you'd find at a toy store — a plastic blister pack (clear bubble) over a colorful cardboard backing. Styled for printing as a 4x6 image.
 
-IMPORTANT: All packaging content must fit within the TOP 85% of the image. The bottom 15% is reserved (see below).
+IMPORTANT: All packaging content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 PACKAGING LAYOUT — follow this exactly:
 - TOP HEADER (cardboard backing, top 15% of image): The text "${PERSON} — FUTURE TECH HERO" in large bold comic/toy font. Use navy blue and gold colors.
@@ -71,7 +74,7 @@ Style: Realistic toy packaging. The plastic bubble must look real — glossy, wi
     id: 'superhero',
     prompt: `Create a superhero comic book cover. It must look like a real printed comic book cover, styled for printing as a 4x6 image.
 
-IMPORTANT: All cover content must fit within the TOP 85% of the image. The bottom 15% is reserved (see below).
+IMPORTANT: All cover content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 COVER LAYOUT — follow this exactly:
 - TOP TITLE BANNER (top 12% of image): Large bold retro comic lettering: "${PERSON}'s TECH ADVENTURES" — full width, navy blue background, gold letters, thick black outline.
@@ -91,7 +94,7 @@ Style: Bold colors, thick black outlines, Ben-Day dot halftone texture, dynamic 
     id: 'minecraft',
     prompt: `Create a Minecraft-themed collectible character card. Everything must be rendered in Minecraft's iconic blocky pixel-art style. Styled for printing as a 4x6 image.
 
-IMPORTANT: All card content must fit within the TOP 85% of the image. The bottom 15% is reserved (see below).
+IMPORTANT: All card content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 CARD LAYOUT — follow this exactly:
 - TOP HEADER (dark stone-block texture, pixelated): The text "MINECRAFT" in the official Minecraft font (blocky, pixelated, green/white), and below it "CAREER FAIR EDITION" in smaller pixel text
@@ -117,41 +120,42 @@ async function compositeBanner(imageBuffer, aaLogoBuffer) {
   const meta = await sharp(imageBuffer).metadata();
   const W = meta.width;
   const H = meta.height;
-  const BANNER_H = Math.round(H * 0.15); // 15% — matches BANNER_INSTRUCTION in prompts
+  const BANNER_H = Math.round(H * 0.18); // 18% — matches BANNER_INSTRUCTION in prompts
   const Y = H - BANNER_H;
+  const PAD = Math.round(W * 0.035);
 
-  // Resize AA logo to fit banner height (65% of banner height)
-  const logoH = Math.round(BANNER_H * 0.65);
+  // Logo: left-aligned, 62% of banner height
+  const logoH = Math.round(BANNER_H * 0.62);
   const aaResized = await sharp(aaLogoBuffer)
     .resize({ height: logoH, fit: 'contain', background: { r: 26, g: 59, b: 140, alpha: 0 } })
     .toBuffer();
   const aaResizedMeta = await sharp(aaResized).metadata();
   const logoW = aaResizedMeta.width;
-  const logoX = Math.round(W * 0.04);
+  const logoX = PAD;
   const logoY = Y + Math.round((BANNER_H - logoH) / 2);
 
-  // Build SVG text overlay for school name (right-aligned)
-  const fontSize = Math.round(BANNER_H * 0.27);
-  const fontSize2 = Math.round(BANNER_H * 0.27);
-  const textX = W - Math.round(W * 0.04);
+  // Text area: starts AFTER logo + gap — never overlaps
+  const textLeft = logoX + logoW + PAD;
+  const textAreaW = W - PAD - textLeft;
   const line1Y = Y + Math.round(BANNER_H * 0.35);
   const line2Y = Y + Math.round(BANNER_H * 0.72);
 
+  // Auto-fit font: "STATESVILLE RD ELEMENTARY" must fit in textAreaW
+  // SVG can't measureText, so estimate: bold Arial ~0.56px per px of font-size per char
+  const chars = 'STATESVILLE RD ELEMENTARY'.length; // 25 chars
+  const fontSize = Math.min(Math.round(BANNER_H * 0.30), Math.floor(textAreaW / (chars * 0.56)));
+  const fontSize2 = Math.round(fontSize * 0.92);
+
   const svgText = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-    <!-- Navy banner background -->
     <rect x="0" y="${Y}" width="${W}" height="${BANNER_H}" fill="#1A3B8C"/>
-    <!-- Gold separator line -->
     <rect x="0" y="${Y}" width="${W}" height="3" fill="#F5A800"/>
-    <!-- School name lines -->
-    <text x="${textX}" y="${line1Y}" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="end" dominant-baseline="middle">STATESVILLE RD ELEMENTARY</text>
-    <text x="${textX}" y="${line2Y}" font-family="Arial, sans-serif" font-size="${fontSize2}" font-weight="bold" fill="#F5A800" text-anchor="end" dominant-baseline="middle">CAREER FAIR</text>
+    <text x="${textLeft}" y="${line1Y}" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="start" dominant-baseline="middle">STATESVILLE RD ELEMENTARY</text>
+    <text x="${textLeft}" y="${line2Y}" font-family="Arial, sans-serif" font-size="${fontSize2}" font-weight="bold" fill="#F5A800" text-anchor="start" dominant-baseline="middle">CAREER FAIR</text>
   </svg>`;
 
   const result = await sharp(imageBuffer)
     .composite([
-      // Navy banner + text via SVG
       { input: Buffer.from(svgText), top: 0, left: 0 },
-      // AA logo
       { input: aaResized, top: logoY, left: logoX }
     ])
     .png()

@@ -171,11 +171,12 @@ async function main() {
     assert(!hasGridCols, '.card-grid still uses grid-template-columns — should be a horizontal flex row');
   });
 
-  await test('Banner reservation is 15% in client-side compositing', async () => {
+  await test('Banner reservation is 18% in client-side compositing', async () => {
     const r  = await fetch(`${BASE_URL}/script.js`);
     const js = await r.text();
-    assert(js.includes('0.15'), 'script.js compositeBanner should use 0.15 (15%) not 0.10 (10%)');
-    assert(!js.includes('0.10'), 'script.js still has 0.10 — update to 0.15 to match prompts');
+    assert(js.includes('0.18'), 'script.js compositeBanner should use 0.18 (18%)');
+    assert(!js.includes('* 0.10'), 'script.js still has old 0.10 value');
+    assert(!js.includes('* 0.15'), 'script.js still has old 0.15 value');
   });
 
   await test('Minecraft card uses career skills (not HEALTH/XP game stats)', async () => {

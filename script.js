@@ -110,12 +110,12 @@ function buildPrompt(cardType, personName, teacherName) {
   // The banner is composited in code AFTER generation (real AA logo + school name).
   // We ask the AI to leave 15% of the image height as a plain navy rectangle at the very
   // bottom — this gives enough clearance so card content never gets covered.
-  const BANNER_INSTRUCTION = `BOTTOM BANNER ZONE (the bottom 15% of the full image height): This entire strip must be a solid flat navy blue (#1A3B8C) rectangle with absolutely NO text, NO logos, NO artwork, and NO decorations of any kind. All card content (borders, art, stats, text) must be fully contained within the top 85% of the image. This zone will be replaced in post-production.`;
+  const BANNER_INSTRUCTION = `BOTTOM BANNER ZONE (the bottom 18% of the full image height): This entire strip must be a solid flat navy blue (#1A3B8C) rectangle with absolutely NO text, NO logos, NO artwork, and NO decorations of any kind. All card content (borders, art, stats, text) must be fully contained within the top 82% of the image. This zone will be replaced in post-production.`;
 
   if (cardType === 'trading-card') {
     return `Create a fun, ultra-rare Pokemon-style trading card. The image must look like a real physical trading card, perfectly centered, styled for printing as a 4x6 image.
 
-IMPORTANT: All card content must fit within the TOP 85% of the image. The bottom 15% is reserved (see below).
+IMPORTANT: All card content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 CARD LAYOUT — follow this exactly:
 - GOLD/YELLOW outer border (thick, like a real Pokemon card)
@@ -124,10 +124,13 @@ CARD LAYOUT — follow this exactly:
 - TOP RIGHT: "300 HP" in large bold Pokemon-style font
 - TOP RIGHT below that: A gold star badge reading "Ultra Rare"
 - CENTER (main art area): An anime/manga-style illustration of the person from the reference photo. Make them look like a friendly anime kid character, smiling. Bright colorful background with sparkles and energy bursts.
-- LOWER CARD (skill section, inside the top 85%): Three skill rows in classic Pokemon card style, each on its own line with LARGE, clearly readable text:
-  Row 1: "💡 Creativity — 80"
-  Row 2: "⚙️ Problem Solving — 90"
-  Row 3: "🤝 Collaboration — 85"
+- LOWER CARD (skill section, inside top 82%): Three skill rows in classic Pokemon card style. Each row has TWO lines — a bold name/score line followed by a smaller italic flavor description, exactly like a real Pokemon card attack description:
+  Row 1 bold:   "💡 Creativity — 80"
+  Row 1 italic: "Dreams up bold new ideas and turns imagination into reality."
+  Row 2 bold:   "⚙️ Problem Solving — 90"
+  Row 2 italic: "Breaks any challenge into steps and never gives up finding the answer."
+  Row 3 bold:   "🤝 Collaboration — 85"
+  Row 3 italic: "Makes every teammate better and builds something greater together."
 - ${BANNER_INSTRUCTION}
 
 Style: Bright, playful, collectible. Realistic card shadow like it's sitting on a table. DO NOT add any other text beyond what is listed above.`;
@@ -136,7 +139,7 @@ Style: Bright, playful, collectible. Realistic card shadow like it's sitting on 
   if (cardType === 'action-figure') {
     return `Create a fun action figure toy packaging image, like a collectible you'd find at a toy store — a plastic blister pack (clear bubble) over a colorful cardboard backing. Styled for printing as a 4x6 image.
 
-IMPORTANT: All packaging content must fit within the TOP 85% of the image. The bottom 15% is reserved (see below).
+IMPORTANT: All packaging content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 PACKAGING LAYOUT — follow this exactly:
 - TOP HEADER (cardboard backing, top 15% of image): The text "${personName} — FUTURE TECH HERO" in large bold comic/toy font. Use navy blue and gold colors.
@@ -157,7 +160,7 @@ Style: Realistic toy packaging. The plastic bubble must look real — glossy, wi
   if (cardType === 'superhero-comic') {
     return `Create a superhero comic book cover. It must look like a real printed comic book cover, styled for printing as a 4x6 image.
 
-IMPORTANT: All cover content must fit within the TOP 85% of the image. The bottom 15% is reserved (see below).
+IMPORTANT: All cover content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 COVER LAYOUT — follow this exactly:
 - TOP TITLE BANNER (top 12% of image): Large bold retro comic lettering: "${personName}'s TECH ADVENTURES" — full width, navy blue background, gold letters, thick black outline.
@@ -177,7 +180,7 @@ Style: Bold colors, thick black outlines, Ben-Day dot halftone texture, dynamic 
   if (cardType === 'minecraft-card') {
     return `Create a Minecraft-themed collectible character card. Everything must be rendered in Minecraft's iconic blocky pixel-art style. Styled for printing as a 4x6 image.
 
-IMPORTANT: All card content must fit within the TOP 85% of the image. The bottom 15% is reserved (see below).
+IMPORTANT: All card content must fit within the TOP 82% of the image. The bottom 18% is reserved (see below).
 
 CARD LAYOUT — follow this exactly:
 - TOP HEADER (dark stone-block texture, pixelated): The text "MINECRAFT" in the official Minecraft font (blocky, pixelated, green/white), and below it "CAREER FAIR EDITION" in smaller pixel text
@@ -208,8 +211,9 @@ async function compositeBanner(b64png) {
     img.onload = () => {
       const W = img.width;
       const H = img.height;
-      const BANNER_H = Math.round(H * 0.15); // 15% from bottom — matches BANNER_INSTRUCTION in prompts
+      const BANNER_H = Math.round(H * 0.18); // 18% — matches BANNER_INSTRUCTION in prompts
       const Y = H - BANNER_H;
+      const PAD = Math.round(W * 0.035);
 
       const canvas = document.createElement('canvas');
       canvas.width = W;
@@ -219,41 +223,51 @@ async function compositeBanner(b64png) {
       // Draw base image
       ctx.drawImage(img, 0, 0);
 
-      // Ensure banner area is solid navy (in case AI bled over)
+      // Solid navy banner (covers anything the AI drew in the reserved zone)
       ctx.fillStyle = '#1A3B8C';
       ctx.fillRect(0, Y, W, BANNER_H);
 
-      // Separator line in gold
+      // Gold separator line
       ctx.fillStyle = '#F5A800';
       ctx.fillRect(0, Y, W, 3);
 
-      // Load AA logo and draw it
       const aaLogo = new Image();
       aaLogo.onload = () => {
-        const logoH = BANNER_H * 0.65;
-        const logoW = aaLogo.width * (logoH / aaLogo.height);
-        const logoX = W * 0.04;
-        const logoY = Y + (BANNER_H - logoH) / 2;
+        // Logo: left-aligned
+        const logoH = Math.round(BANNER_H * 0.62);
+        const logoW = Math.round(aaLogo.width * (logoH / aaLogo.height));
+        const logoX = PAD;
+        const logoY = Y + Math.round((BANNER_H - logoH) / 2);
         ctx.drawImage(aaLogo, logoX, logoY, logoW, logoH);
 
-        // School name text on the right side
-        const fontSize = Math.round(BANNER_H * 0.28);
+        // Text area: starts AFTER the logo + a gap — never overlaps
+        const textLeft = logoX + logoW + PAD;
+        const textRight = W - PAD;
+        const textAreaW = textRight - textLeft;
+
+        // Auto-shrink font until "STATESVILLE RD ELEMENTARY" fits in the text area
+        let fontSize = Math.round(BANNER_H * 0.30);
+        ctx.font = `800 ${fontSize}px "Segoe UI", Arial, sans-serif`;
+        while (ctx.measureText('STATESVILLE RD ELEMENTARY').width > textAreaW && fontSize > 10) {
+          fontSize--;
+          ctx.font = `800 ${fontSize}px "Segoe UI", Arial, sans-serif`;
+        }
+
         ctx.fillStyle = '#FFFFFF';
-        ctx.font = `700 ${fontSize}px "Segoe UI", Arial, sans-serif`;
-        ctx.textAlign = 'right';
+        ctx.textAlign = 'left';
         ctx.textBaseline = 'middle';
-        const textX = W - W * 0.04;
-        const line1Y = Y + BANNER_H * 0.33;
-        const line2Y = Y + BANNER_H * 0.68;
-        ctx.fillText('STATESVILLE RD ELEMENTARY', textX, line1Y);
+        ctx.fillText('STATESVILLE RD ELEMENTARY', textLeft, Y + BANNER_H * 0.35);
+
+        const fontSize2 = Math.round(fontSize * 0.92);
+        ctx.font = `800 ${fontSize2}px "Segoe UI", Arial, sans-serif`;
         ctx.fillStyle = '#F5A800';
-        ctx.fillText('CAREER FAIR', textX, line2Y);
+        ctx.fillText('CAREER FAIR', textLeft, Y + BANNER_H * 0.72);
 
         resolve(canvas.toDataURL('image/png'));
       };
       aaLogo.onerror = () => {
-        // If logo fails to load, still resolve without it
-        const fontSize = Math.round(BANNER_H * 0.28);
+        // Fallback: centered text if logo fails to load
+        const fontSize = Math.round(BANNER_H * 0.24);
         ctx.fillStyle = '#FFFFFF';
         ctx.font = `700 ${fontSize}px "Segoe UI", Arial, sans-serif`;
         ctx.textAlign = 'center';
@@ -261,7 +275,7 @@ async function compositeBanner(b64png) {
         ctx.fillText('AUTOMATION ANYWHERE  ·  STATESVILLE RD ELEMENTARY CAREER FAIR', W / 2, Y + BANNER_H / 2);
         resolve(canvas.toDataURL('image/png'));
       };
-      aaLogo.src = 'images/AAI standard.png';
+      aaLogo.src = 'images/2021-AAI-White.png';
     };
     img.onerror = reject;
     img.src = `data:image/png;base64,${b64png}`;
@@ -323,7 +337,7 @@ async function generateCard() {
   try {
     const photoBase64 = photoDataUrl.replace(/^data:image\/(jpeg|png|webp);base64,/, '');
 
-    const aaResp = await fetch('images/AAI standard.png');
+    const aaResp = await fetch('images/2021-AAI-White.png');
     if (!aaResp.ok) throw new Error('Could not load AA logo');
     const aaLogoBase64 = await blobToBase64(await aaResp.blob());
 
