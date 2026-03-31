@@ -8,6 +8,33 @@
 </head>
 <body>
 
+  <!-- ===== FULL-PAGE LOADING OVERLAY (hamster) ===== -->
+  <div id="loading-overlay" hidden>
+    <p class="loading-title">Creating your card...</p>
+    <div class="wheel-and-hamster" aria-label="Loading animation" role="img">
+      <div class="wheel"></div>
+      <div class="hamster">
+        <div class="hamster__body">
+          <div class="hamster__head">
+            <div class="hamster__ear"></div>
+            <div class="hamster__eye"></div>
+            <div class="hamster__nose"></div>
+          </div>
+          <div class="hamster__limb hamster__limb--fr"></div>
+          <div class="hamster__limb hamster__limb--fl"></div>
+          <div class="hamster__limb hamster__limb--br"></div>
+          <div class="hamster__limb hamster__limb--bl"></div>
+          <div class="hamster__tail"></div>
+        </div>
+      </div>
+      <div class="spoke"></div>
+    </div>
+    <p class="progress-message"></p>
+  </div>
+
+  <!-- ===== FULL-PAGE CAMERA FLASH ===== -->
+  <div id="flash-overlay" hidden></div>
+
   <header>
     <div class="header-inner">
       <img src="images/statesvilleroad.png" alt="SRES" class="logo-school">
@@ -42,23 +69,25 @@
     <!-- ===== STEP 1: PHOTO ===== -->
     <div class="step" id="step-1">
       <h2>Take Your Photo</h2>
-      <p class="step-hint">Look at the camera and give your best smile!</p>
+      <p class="step-hint">Look at the camera and give your best smile! 😄</p>
 
-      <div class="camera-frame" id="camera-frame">
-        <video id="video" autoplay playsinline muted></video>
-        <div id="countdown-overlay" class="countdown-overlay" hidden></div>
-        <div id="flash-overlay" class="flash-overlay" hidden></div>
+      <!-- Camera row: video left, button right -->
+      <div class="camera-row" id="camera-row">
+        <div class="camera-frame" id="camera-frame">
+          <video id="video" autoplay playsinline muted></video>
+          <div id="countdown-overlay" class="countdown-overlay" hidden></div>
+        </div>
+        <div class="camera-btn-col" id="camera-actions">
+          <button class="btn btn-gold btn-capture" id="capture-btn">
+            📸<br>Take<br>Photo
+          </button>
+        </div>
       </div>
       <canvas id="canvas" hidden></canvas>
 
       <div id="no-camera-msg" class="no-camera-msg" hidden>
         <p>📷 Camera not available.<br>Please allow camera access and reload the page.</p>
       </div>
-
-      <div id="camera-actions" class="center-actions">
-        <button class="btn btn-gold btn-xl" id="capture-btn">📸 Take Photo</button>
-      </div>
-
 
       <div id="preview-actions" hidden>
         <div class="photo-taken-wrap">
@@ -111,31 +140,8 @@
       </div>
     </div>
 
-    <!-- ===== STEP 3: LOADING + RESULT ===== -->
+    <!-- ===== STEP 3: RESULT ONLY (loading is a global overlay) ===== -->
     <div class="step" id="step-3" hidden>
-
-      <div id="loading-state">
-        <p class="loading-title">Creating your card...</p>
-        <div class="wheel-and-hamster" aria-label="Loading animation" role="img">
-          <div class="wheel"></div>
-          <div class="hamster">
-            <div class="hamster__body">
-              <div class="hamster__head">
-                <div class="hamster__ear"></div>
-                <div class="hamster__eye"></div>
-                <div class="hamster__nose"></div>
-              </div>
-              <div class="hamster__limb hamster__limb--fr"></div>
-              <div class="hamster__limb hamster__limb--fl"></div>
-              <div class="hamster__limb hamster__limb--br"></div>
-              <div class="hamster__limb hamster__limb--bl"></div>
-              <div class="hamster__tail"></div>
-            </div>
-          </div>
-          <div class="spoke"></div>
-        </div>
-        <p class="progress-message">Feeding the hamster...</p>
-      </div>
 
       <div id="result-state" hidden>
         <h2>Your card is ready! 🎉</h2>

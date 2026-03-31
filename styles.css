@@ -172,7 +172,7 @@ header {
 main {
   flex: 1;
   width: 100%;
-  max-width: 480px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 1.5rem 1rem 3rem;
 }
@@ -197,15 +197,22 @@ main {
 }
 
 /* ===== CAMERA ===== */
+.camera-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
 .camera-frame {
   position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 4;
+  flex: 1;
+  aspect-ratio: 4 / 3;
   background: #111;
   border-radius: var(--radius-md);
   overflow: hidden;
-  margin-bottom: 1rem;
   box-shadow: var(--shadow-md);
+  min-width: 0;
 }
 
 #video {
@@ -223,18 +230,37 @@ main {
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: clamp(80px, 25vw, 160px);
+  font-size: clamp(80px, 20vw, 160px);
   font-weight: 900;
   z-index: 10;
 }
 
-.flash-overlay {
-  position: absolute;
+/* Full-page flash — now outside camera frame */
+#flash-overlay {
+  position: fixed;
   inset: 0;
   background: white;
-  z-index: 11;
-  transition: opacity 0.35s ease;
+  z-index: 9000;
   pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.camera-btn-col {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-capture {
+  width: 84px;
+  height: 110px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.6;
+  flex-direction: column;
+  padding: 0.5rem;
 }
 
 .no-camera-msg {
@@ -247,12 +273,6 @@ main {
   margin-bottom: 1rem;
   line-height: 1.9;
   font-size: 0.95rem;
-}
-
-.center-actions {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0.5rem;
 }
 
 /* ===== PHOTO PREVIEW ===== */
@@ -523,17 +543,25 @@ main {
   align-items: center;
 }
 
-/* ===== STEP 3 LOADING ===== */
-#loading-state {
-  display: flex;
+/* ===== FULL-PAGE LOADING OVERLAY ===== */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--gold-bg);
+  z-index: 800;
   flex-direction: column;
   align-items: center;
-  padding: 2.5rem 1rem;
-  gap: 1.25rem;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+/* Use :not([hidden]) so display:flex only applies when visible */
+#loading-overlay:not([hidden]) {
+  display: flex;
 }
 
 .loading-title {
-  font-size: 1.15rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--navy);
 }

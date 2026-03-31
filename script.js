@@ -29,7 +29,7 @@ function stopCamera() {
 
 function startCountdown() {
   const overlay = document.getElementById('countdown-overlay');
-  const flash = document.getElementById('flash-overlay');
+  const flash   = document.getElementById('flash-overlay');
   let count = 3;
   overlay.hidden = false;
   overlay.textContent = count;
@@ -41,12 +41,13 @@ function startCountdown() {
       setTimeout(tick, 800);
     } else {
       overlay.hidden = true;
+      // Full-page flash
       flash.hidden = false;
       flash.style.opacity = '1';
       setTimeout(() => {
         flash.style.opacity = '0';
-        setTimeout(() => { flash.hidden = true; takePhoto(); }, 350);
-      }, 100);
+        setTimeout(() => { flash.hidden = true; takePhoto(); }, 400);
+      }, 80);
     }
   };
   setTimeout(tick, 800);
@@ -64,8 +65,7 @@ function takePhoto() {
     reader.onloadend = () => {
       photoDataUrl = reader.result;
       document.getElementById('preview-img').src = photoDataUrl;
-      document.getElementById('camera-frame').hidden = true;
-      document.getElementById('camera-actions').hidden = true;
+      document.getElementById('camera-row').hidden = true;
       document.getElementById('preview-actions').hidden = false;
     };
     reader.readAsDataURL(blob);
@@ -269,8 +269,9 @@ const progressMessages = [
   'Hamster is running extra fast!'
 ];
 
-function startProgressMessages() {
-  const el = document.querySelector('.progress-message');
+function showLoadingOverlay() {
+  document.getElementById('loading-overlay').hidden = false;
+  const el = document.querySelector('#loading-overlay .progress-message');
   let i = 0;
   if (el) el.textContent = progressMessages[0];
   progressInterval = setInterval(() => {
@@ -279,7 +280,8 @@ function startProgressMessages() {
   }, 3000);
 }
 
-function stopProgressMessages() {
+function hideLoadingOverlay() {
+  document.getElementById('loading-overlay').hidden = true;
   if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
 }
 
@@ -294,15 +296,16 @@ function blobToBase64(blob) {
 
 // ===== GENERATE =====
 async function generateCard() {
-  const personName = document.getElementById('personName').value.trim();
+  const personName  = document.getElementById('personName').value.trim();
   const teacherName = document.getElementById('teacherName').value.trim();
-  const filename = `${personName}_${teacherName}_${Date.now()}`;
+  const filename    = `${personName}_${teacherName}_${Date.now()}`;
 
-  goToStep(3);
-  document.getElementById('loading-state').hidden = false;
+  // Reset result/error from any previous run before showing overlay
+  document.getElementById('result-image').src = '';
   document.getElementById('result-state').hidden = true;
   document.getElementById('error-state').hidden = true;
-  startProgressMessages();
+
+  showLoadingOverlay();
   stopCamera();
 
   try {
@@ -320,13 +323,18 @@ async function generateCard() {
       body: JSON.stringify({ photoBase64, aaLogoBase64, prompt, size: '1024x1536' })
     });
 
+    // Guard against non-JSON responses (e.g. HTML error pages from proxy/CDN)
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      const raw = await response.text();
+      throw new Error(`Unexpected server response (${response.status}): ${raw.slice(0, 120)}`);
+    }
+
     const data = await response.json();
 
     if (!response.ok) {
       throw new Error(data.error || `Server error ${response.status}`);
     }
-
-    stopProgressMessages();
 
     const b64 = data.data?.[0]?.b64_json;
     if (!b64) throw new Error('No image returned from API');
@@ -334,8 +342,9 @@ async function generateCard() {
     // Composite real banner on top of AI result
     const finalImgSrc = await compositeBanner(b64);
 
+    hideLoadingOverlay();
+    goToStep(3);
     document.getElementById('result-image').src = finalImgSrc;
-    document.getElementById('loading-state').hidden = true;
     document.getElementById('result-state').hidden = false;
 
     // Auto-download
@@ -346,10 +355,11 @@ async function generateCard() {
 
   } catch (err) {
     console.error('Generation error:', err);
-    stopProgressMessages();
-    document.getElementById('loading-state').hidden = true;
+    hideLoadingOverlay();
+    goToStep(3);
+    document.getElementById('error-text').textContent =
+      `😞 ${err.message || 'Something went wrong. Please try again.'}`;
     document.getElementById('error-state').hidden = false;
-    document.getElementById('error-text').textContent = `😞 ${err.message || 'Something went wrong. Please try again.'}`;
   }
 }
 
@@ -364,8 +374,7 @@ document.getElementById('capture-btn').addEventListener('click', startCountdown)
 document.getElementById('retake-btn').addEventListener('click', () => {
   photoDataUrl = null;
   document.getElementById('preview-img').src = '';
-  document.getElementById('camera-frame').hidden = false;
-  document.getElementById('camera-actions').hidden = false;
+  document.getElementById('camera-row').hidden = false;
   document.getElementById('preview-actions').hidden = true;
   if (!videoStream) initCamera();
 });
@@ -375,13 +384,11 @@ document.getElementById('next-btn-1').addEventListener('click', () => goToStep(2
 document.getElementById('back-btn-2').addEventListener('click', () => {
   goToStep(1);
   if (photoDataUrl) {
-    document.getElementById('camera-frame').hidden = true;
-    document.getElementById('camera-actions').hidden = true;
+    document.getElementById('camera-row').hidden = true;
     document.getElementById('preview-actions').hidden = false;
     document.getElementById('preview-img').src = photoDataUrl;
   } else {
-    document.getElementById('camera-frame').hidden = false;
-    document.getElementById('camera-actions').hidden = false;
+    document.getElementById('camera-row').hidden = false;
     document.getElementById('preview-actions').hidden = true;
     if (!videoStream) initCamera();
   }
@@ -401,8 +408,7 @@ document.getElementById('start-over-btn').addEventListener('click', () => {
   selectedCardType = 'trading-card';
   checkGenerateBtn();
 
-  document.getElementById('camera-frame').hidden = false;
-  document.getElementById('camera-actions').hidden = false;
+  document.getElementById('camera-row').hidden = false;
   document.getElementById('preview-actions').hidden = true;
   document.getElementById('no-camera-msg').hidden = true;
 
