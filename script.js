@@ -414,11 +414,3 @@ document.getElementById('retry-btn').addEventListener('click', () => {
   goToStep(2);
 });
 
-// Demo gallery toggle
-document.getElementById('demo-toggle').addEventListener('click', () => {
-  const gallery = document.getElementById('demo-gallery');
-  const btn = document.getElementById('demo-toggle');
-  const isOpen = !gallery.hidden;
-  gallery.hidden = isOpen;
-  btn.classList.toggle('open', !isOpen);
-});

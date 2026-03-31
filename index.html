@@ -59,29 +59,6 @@
         <button class="btn btn-gold btn-xl" id="capture-btn">📸 Take Photo</button>
       </div>
 
-      <div class="demo-section">
-        <button class="demo-toggle" id="demo-toggle">✨ See example cards <span class="demo-arrow">▾</span></button>
-        <div class="demo-gallery" id="demo-gallery" hidden>
-          <div class="demo-scroll">
-            <div class="demo-item">
-              <img src="images/demos/pokemon.png" alt="Pokémon Card example" loading="lazy">
-              <span>⚡ Pokémon Card</span>
-            </div>
-            <div class="demo-item">
-              <img src="images/demos/action-figure.png" alt="Action Figure example" loading="lazy">
-              <span>🚀 Action Figure</span>
-            </div>
-            <div class="demo-item">
-              <img src="images/demos/superhero.png" alt="Superhero Comic example" loading="lazy">
-              <span>🦸 Superhero Comic</span>
-            </div>
-            <div class="demo-item">
-              <img src="images/demos/minecraft.png" alt="Minecraft Card example" loading="lazy">
-              <span>🧱 Minecraft Card</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div id="preview-actions" hidden>
         <div class="photo-taken-wrap">
@@ -111,24 +88,20 @@
       <h2 class="section-title">Choose Your Card Type</h2>
       <div class="card-grid" id="card-grid">
         <button class="card-opt selected" data-value="trading-card">
-          <span class="card-opt-icon">⚡</span>
-          <span class="card-opt-name">Pokémon Card</span>
-          <span class="card-opt-tag">Level up your future!</span>
+          <img src="images/demos/pokemon.png" alt="Pokémon Card" class="card-opt-preview">
+          <span class="card-opt-name">⚡ Pokémon Card</span>
         </button>
         <button class="card-opt" data-value="action-figure">
-          <span class="card-opt-icon">🚀</span>
-          <span class="card-opt-name">Action Figure</span>
-          <span class="card-opt-tag">Blast off to success!</span>
+          <img src="images/demos/action-figure.png" alt="Action Figure" class="card-opt-preview">
+          <span class="card-opt-name">🚀 Action Figure</span>
         </button>
         <button class="card-opt" data-value="superhero-comic">
-          <span class="card-opt-icon">🦸</span>
-          <span class="card-opt-name">Superhero Comic</span>
-          <span class="card-opt-tag">Your powers are real!</span>
+          <img src="images/demos/superhero.png" alt="Superhero Comic" class="card-opt-preview">
+          <span class="card-opt-name">🦸 Superhero Comic</span>
         </button>
-<button class="card-opt" data-value="minecraft-card">
-          <span class="card-opt-icon">🧱</span>
-          <span class="card-opt-name">Minecraft Card</span>
-          <span class="card-opt-tag">Build something amazing!</span>
+        <button class="card-opt" data-value="minecraft-card">
+          <img src="images/demos/minecraft.png" alt="Minecraft Card" class="card-opt-preview">
+          <span class="card-opt-name">🧱 Minecraft Card</span>
         </button>
       </div>
 
