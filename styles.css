@@ -248,13 +248,17 @@ main {
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,0.65);
-  display: flex;
+  /* NOTE: display kept in :not([hidden]) rule — plain display:flex would
+     override UA [hidden]{display:none} and show the dark overlay always */
   align-items: center;
   justify-content: center;
   color: white;
   font-size: clamp(100px, 18vw, 200px);
   font-weight: 900;
   z-index: 10;
+}
+.countdown-overlay:not([hidden]) {
+  display: flex;
 }
 
 /* Full-page flash — outside camera frame, fixed over everything */
@@ -396,25 +400,28 @@ main {
   }
 }
 
-/* ===== STEP 3 — constrained width, internal scroll ===== */
+/* ===== STEP 3 — fills viewport, no scroll, card fits height ===== */
 #step-3:not([hidden]) {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;           /* no page scroll — image fits in the space */
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  max-width: 760px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 1.75rem 1.5rem 3rem;
+  padding: 0.75rem 1rem 0.5rem;
   align-self: center;
 }
 
 /* Step 3 headings */
 #step-3 h2 {
-  font-size: 1.5rem;
+  flex-shrink: 0;
+  font-size: 1.3rem;
   color: var(--navy);
   font-weight: 800;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.4rem;
+  text-align: center;
 }
 
 /* ===== FORM FIELDS ===== */
@@ -802,30 +809,32 @@ main {
 /* ===== RESULT ===== */
 /* Use :not([hidden]) so display:flex doesn't override the [hidden] attribute */
 #result-state:not([hidden]) {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
-  padding: 0.5rem 0 1rem;
-}
-
-#result-state h2 {
-  font-size: 1.75rem;
-  color: var(--navy);
-  font-weight: 800;
-  text-align: center;
+  gap: 0.55rem;
 }
 
 .result-img {
-  width: 100%;
+  /* Fills all remaining space between heading and buttons.
+     flex:1 + min-height:0 lets it shrink; max-width + object-fit keep aspect ratio. */
+  flex: 1;
+  min-height: 0;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   display: block;
 }
 
 .download-hint {
+  flex-shrink: 0;
   color: var(--gray-600);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-align: center;
 }
 
