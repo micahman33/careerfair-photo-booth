@@ -135,7 +135,7 @@ PACKAGING LAYOUT — follow this exactly:
 - TOP HEADER (cardboard backing): The text "${personName} — FUTURE TECH HERO" in large bold comic/toy font. Use navy blue and gold colors.
 - TOP LEFT CORNER: A circular yellow badge with the text "Career Fair Edition"
 - TOP RIGHT CORNER: The text "${teacherName}" in small font
-- CENTER (inside the blister pack bubble): A 3D cartoon-style toy figure of an elementary school-aged CHILD (ages 6-11) based on the face in the reference photo. IMPORTANT: always draw a young kid's body — never an adult or teen body:
+- CENTER (inside the blister pack bubble): A 3D cartoon-style toy figure of the person from the reference photo. IMPORTANT: match the figure's age to the person in the photo — draw a child figure if they appear to be a child, an adult figure if they appear to be an adult. If age is unclear, lean toward a younger depiction:
   - Fully enclosed inside a clear plastic bubble/blister pack (visible plastic with light reflections)
   - Smiling and in a confident heroic pose, wearing a fun STEM-themed outfit
   - Accompanied by exactly 3 small accessories inside the bubble: a mini laptop, a small robot, and a backpack
@@ -152,7 +152,7 @@ Style: Realistic toy packaging. The plastic bubble must look real — glossy, wi
 COVER LAYOUT — follow this exactly:
 - TOP TITLE BANNER: Large bold retro comic lettering: "${personName}'s TECH ADVENTURES" — full width, navy blue background, gold letters, thick black outline.
 - SMALL TEXT below title: "Career Fair Edition · ${teacherName}'s Class" — small but readable
-- MAIN ART (center, fills most of the cover): A full-body dynamic illustration of an elementary school-aged CHILD (ages 6-11) as a superhero, based on the face in the reference photo. IMPORTANT: always draw a young kid's body — never an adult, teen, or grown-up body:
+- MAIN ART (center, fills most of the cover): A full-body dynamic illustration of the person from the reference photo as a superhero. IMPORTANT: match the character's age to the person in the photo — draw a child if they appear to be a child, an adult if they appear to be an adult. If age is unclear, lean toward a younger depiction:
   - Colorful STEM-themed superhero costume (circuit board patterns, glowing blue tech lines)
   - Flying or leaping heroically with fist forward, big smile
   - Dramatic city skyline background with light beams and energy effects
@@ -169,7 +169,7 @@ Style: Bold colors, thick black outlines, Ben-Day dot halftone texture, dynamic 
 CARD LAYOUT — follow this exactly:
 - TOP HEADER (dark stone-block texture, pixelated): The text "MINECRAFT" in the official Minecraft font (blocky, pixelated, green/white), and below it "CAREER FAIR EDITION" in smaller pixel text
 - TEACHER LABEL (top right, small pixel font): "${teacherName}"
-- MAIN ART (center, large): A full-body Minecraft skin/character of an elementary school-aged CHILD (ages 6-11) based on the face from the reference photo. IMPORTANT: always draw a young kid's proportions — never an adult or teen:
+- MAIN ART (center, large): A full-body Minecraft skin/character based on the person from the reference photo. IMPORTANT: match the character's age to the person in the photo — use child proportions if they appear to be a child, adult proportions if they appear to be an adult. If age is unclear, lean toward a younger depiction:
   - Classic blocky Minecraft character proportions
   - Wearing a white lab coat skin, holding a diamond pickaxe in one hand and a blocky laptop in the other
   - Standing on grass blocks with a blue Minecraft sky
