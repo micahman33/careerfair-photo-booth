@@ -169,14 +169,39 @@ async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
   const bannerBuffer = await sharp(Buffer.from(bannerSvg)).png().toBuffer();
 
   // Extend the image downward and composite everything into the new space
-  const result = await sharp(imageBuffer)
+  const composited = await sharp(imageBuffer)
     .extend({ bottom: BANNER_H, background: { r: 26, g: 59, b: 140, alpha: 255 } })
     .composite([
       { input: bannerBuffer, top: H,          left: 0     },
       { input: aaResized,    top: H + aaY,    left: aaX   },
       { input: sresResized,  top: H + sresY,  left: sresX },
     ])
-    .png()
+    .toBuffer();
+
+  // Scale to 4×6 print size (1200×1800px = 300 DPI for Walgreens/standard photo lab).
+  // Our image is taller/narrower than 4×6, so scale to fit height and fill the
+  // narrow side margins with navy to match the banner — looks intentional.
+  const PRINT_W = 1200;
+  const PRINT_H = 1800;
+  const cMeta   = await sharp(composited).metadata();
+  const scale   = Math.min(PRINT_W / cMeta.width, PRINT_H / cMeta.height);
+  const scaledW = Math.round(cMeta.width  * scale);
+  const scaledH = Math.round(cMeta.height * scale);
+  const offsetX = Math.round((PRINT_W - scaledW) / 2);
+  const offsetY = Math.round((PRINT_H - scaledH) / 2);
+
+  const scaledCard = await sharp(composited)
+    .resize(scaledW, scaledH)
+    .toBuffer();
+
+  // Navy background canvas, then place scaled card centered
+  const navyBg = await sharp({
+    create: { width: PRINT_W, height: PRINT_H, channels: 3, background: { r: 26, g: 59, b: 140 } }
+  }).png().toBuffer();
+
+  const result = await sharp(navyBg)
+    .composite([{ input: scaledCard, top: offsetY, left: offsetX }])
+    .jpeg({ quality: 92 })
     .toBuffer();
 
   return result;
@@ -211,7 +236,7 @@ async function generateCard(card, photoBuffer, aaBuffer, sresBuffer) {
   console.log(`  Compositing banner...`);
   const finalBuffer = await compositeBanner(rawBuffer, aaBuffer, sresBuffer);
 
-  const outPath = join(OUT_DIR, `${card.id}.png`);
+  const outPath = join(OUT_DIR, `${card.id}.jpg`);
   writeFileSync(outPath, finalBuffer);
   console.log(`  Saved → ${outPath}`);
 }

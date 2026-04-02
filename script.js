@@ -186,6 +186,26 @@ Style: Pure Minecraft pixel-art aesthetic. Dark background. Glowing enchantment 
   return '';
 }
 
+// ===== PRINT SIZING =====
+// Scales a canvas to 4×6 print dimensions (1200×1800px = 300 DPI).
+// Our composited image is taller/narrower than 4×6, so it's scaled to fit
+// by height and the narrow side margins are filled with navy to match the banner.
+function toPrintCanvas(src) {
+  const PRINT_W = 1200;
+  const PRINT_H = 1800;
+  const scale   = Math.min(PRINT_W / src.width, PRINT_H / src.height);
+  const scaledW = Math.round(src.width  * scale);
+  const scaledH = Math.round(src.height * scale);
+  const out = document.createElement('canvas');
+  out.width  = PRINT_W;
+  out.height = PRINT_H;
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = '#1A3B8C'; // Navy fill matches banner — side bars look intentional
+  ctx.fillRect(0, 0, PRINT_W, PRINT_H);
+  ctx.drawImage(src, Math.round((PRINT_W - scaledW) / 2), Math.round((PRINT_H - scaledH) / 2), scaledW, scaledH);
+  return out;
+}
+
 // ===== BANNER COMPOSITING =====
 // Extends the canvas BELOW the AI image and draws the sponsor banner there.
 // Layout: [AA logo left] [STATESVILLE RD / ELEMENTARY / CAREER FAIR centered] [SRES eagle right]
@@ -277,7 +297,7 @@ async function compositeBanner(b64png) {
         ctx.font = `700 ${fs3}px "Segoe UI", Arial, sans-serif`;
         ctx.fillText('CAREER FAIR', textCX, Y + BANNER_H * 0.80);
 
-        resolve(canvas.toDataURL('image/jpeg', 0.88));
+        resolve(toPrintCanvas(canvas).toDataURL('image/jpeg', 0.92));
       }
 
       function onLoad() { if (++loaded === 2) onBothLoaded(); }
@@ -291,7 +311,7 @@ async function compositeBanner(b64png) {
         ctx.fillText('STATESVILLE RD ELEMENTARY', W / 2, Y + BANNER_H * 0.38);
         ctx.fillStyle = '#F5A800';
         ctx.fillText('CAREER FAIR', W / 2, Y + BANNER_H * 0.72);
-        resolve(canvas.toDataURL('image/jpeg', 0.88));
+        resolve(toPrintCanvas(canvas).toDataURL('image/jpeg', 0.92));
       }
 
       aaLogo.onload    = onLoad;
