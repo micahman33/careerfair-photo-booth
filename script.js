@@ -1,3 +1,13 @@
+// ===== SCHOOL CONFIG =====
+// Update these values to switch schools. All banner and UI references pull from here.
+const SCHOOL_CONFIG = {
+  name:     'Cornelius Elementary',
+  nameLine1: 'CORNELIUS',   // top line of the printed banner
+  nameLine2: 'ELEMENTARY',  // bottom line of the printed banner
+  logoSrc:  'images/corneliuselementary.png',
+  logoAlt:  'CES',
+};
+
 // ===== STATE =====
 let photoDataUrl = null;
 let selectedCardType = 'trading-card';
@@ -208,7 +218,7 @@ function toPrintCanvas(src) {
 
 // ===== BANNER COMPOSITING =====
 // Extends the canvas BELOW the AI image and draws the sponsor banner there.
-// Layout: [AA logo left] [STATESVILLE RD / ELEMENTARY / CAREER FAIR centered] [SRES eagle right]
+// Layout: [AA logo left] [school name / CAREER FAIR centered] [school logo right]
 // The AI image is untouched — no content ever gets covered.
 async function compositeBanner(b64png) {
   return new Promise((resolve, reject) => {
@@ -278,8 +288,8 @@ async function compositeBanner(b64png) {
           return fs;
         }
 
-        const fs1 = fitFont('STATESVILLE RD', Math.round(BANNER_H * 0.26));
-        const fs2 = fitFont('ELEMENTARY',     Math.round(BANNER_H * 0.22));
+        const fs1 = fitFont(SCHOOL_CONFIG.nameLine1, Math.round(BANNER_H * 0.26));
+        const fs2 = fitFont(SCHOOL_CONFIG.nameLine2, Math.round(BANNER_H * 0.22));
         const fs3 = Math.round(BANNER_H * 0.19);
 
         ctx.textAlign    = 'center';
@@ -287,11 +297,11 @@ async function compositeBanner(b64png) {
 
         ctx.fillStyle = '#FFFFFF';
         ctx.font = `800 ${fs1}px "Segoe UI", Arial, sans-serif`;
-        ctx.fillText('STATESVILLE RD', textCX, Y + BANNER_H * 0.25);
+        ctx.fillText(SCHOOL_CONFIG.nameLine1, textCX, Y + BANNER_H * 0.25);
 
         ctx.fillStyle = '#FFFFFF';
         ctx.font = `800 ${fs2}px "Segoe UI", Arial, sans-serif`;
-        ctx.fillText('ELEMENTARY', textCX, Y + BANNER_H * 0.52);
+        ctx.fillText(SCHOOL_CONFIG.nameLine2, textCX, Y + BANNER_H * 0.52);
 
         ctx.fillStyle = '#F5A800';
         ctx.font = `700 ${fs3}px "Segoe UI", Arial, sans-serif`;
@@ -308,7 +318,7 @@ async function compositeBanner(b64png) {
         ctx.font = `700 ${fs}px "Segoe UI", Arial, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('STATESVILLE RD ELEMENTARY', W / 2, Y + BANNER_H * 0.38);
+        ctx.fillText(SCHOOL_CONFIG.name.toUpperCase(), W / 2, Y + BANNER_H * 0.38);
         ctx.fillStyle = '#F5A800';
         ctx.fillText('CAREER FAIR', W / 2, Y + BANNER_H * 0.72);
         resolve(toPrintCanvas(canvas).toDataURL('image/jpeg', 0.92));
@@ -319,7 +329,7 @@ async function compositeBanner(b64png) {
       aaLogo.onerror   = onError;
       sresLogo.onerror = onError;
       aaLogo.src   = 'images/2021-AAI-White.png';
-      sresLogo.src = 'images/statesvilleroad.png';
+      sresLogo.src = SCHOOL_CONFIG.logoSrc;
     };
     img.onerror = reject;
     img.src = `data:image/png;base64,${b64png}`;
