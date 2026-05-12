@@ -156,21 +156,21 @@ PACKAGING LAYOUT — follow this exactly:
 Style: Realistic toy packaging. The plastic bubble must look real — glossy, with reflections. DO NOT add any other text beyond what is listed above.`;
   }
 
-  if (cardType === 'superhero-comic') {
-    return `Create a superhero comic book cover. It must look like a real printed comic book cover, styled for printing as a 4x6 image.
+  if (cardType === 'huntrix-selfie') {
+    return `Photorealistic, 8K resolution group selfie photo. The central subject is the person from the reference photo — preserve their exact likeness with no face alterations and no beautification.
 
-COVER LAYOUT — follow this exactly:
-- TOP TITLE BANNER: Large bold retro comic lettering: "${personName}'s TECH ADVENTURES" — full width, navy blue background, gold letters, thick black outline.
-- SMALL TEXT below title: "Career Fair Edition · ${teacherName}'s Class" — small but readable
-- MAIN ART (center, fills most of the cover): A full-body dynamic illustration of the person from the reference photo as a superhero. IMPORTANT: match the character's age to the person in the photo — draw a child if they appear to be a child, an adult if they appear to be an adult. If age is unclear, lean toward a younger depiction:
-  - Colorful STEM-themed superhero costume (circuit board patterns, glowing blue tech lines)
-  - Flying or leaping heroically with fist forward, big smile
-  - Dramatic city skyline background with light beams and energy effects
-- SPEECH BUBBLE: "Creativity + Code = SUPERPOWERS!" — large, readable comic speech bubble
-- SKILL STRIP at the bottom of the art: Three small comic-style banners: "💡 CREATIVE" · "⚙️ ANALYTICAL" · "🤝 COLLABORATIVE"
-- Issue label (small, bottom right): "ISSUE #1"
+SCENE LAYOUT — follow this exactly:
+- SETTING: A packed concert stage/arena with dramatic stage lighting, smoke effects, and a roaring crowd in the background.
+- CENTRAL SUBJECT (from reference photo): Holding up an iPhone to take the selfie, arm outstretched toward the camera. They are smiling naturally and looking directly into the phone lens.
+- SURROUNDING CHARACTERS — ultra-realistic Kpop Demon Hunter band members Rumi, Zoey, and Mira:
+  - Rumi: hugging the central subject from the side naturally and warmly, leaning her head in close
+  - Zoey: leaning in playfully from the other side, big smile, close to the camera
+  - Mira: slightly behind, leaning forward into the frame with a bright cheerful expression
+  - All three are in stylish Kpop stage outfits — dramatic, fashionable, concert-ready
+- FRAMING: Wide-angle selfie camera style — everyone squeezed into the frame, fun and casual like close friends. Slight lens distortion typical of a phone selfie.
+- CAPTION OVERLAY (small, bottom of frame, semi-transparent dark bar): "${personName} · ${teacherName}'s Class · Career Fair Edition"
 
-Style: Bold colors, thick black outlines, Ben-Day dot halftone texture, dynamic action lines. DO NOT add any other text beyond what is listed above.`;
+Style: Cinematic quality. Realistic studio-grade stage lighting. Natural skin and fabric textures. HDR depth. Sharp details, vibrant yet natural colors. Realistic lens reflections, bokeh depth of field on the background crowd. DO NOT add any other text beyond what is listed above.`;
   }
 
   if (cardType === 'minecraft-card') {

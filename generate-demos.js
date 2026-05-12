@@ -1,9 +1,10 @@
 // Generates demo cards shown in the homepage gallery.
 // Usage: OPENAI_API_KEY=sk-... node generate-demos.js
 //
-// Reads:  images/demo-source.jpg  (reference photo)
-//         images/AAI standard.png (AA logo)
-// Writes: images/demos/pokemon.png, action-figure.png, superhero.png, minecraft.png
+// Reads:  images/demo-source.jpg        (reference photo of you)
+//         images/AAI standard.png       (AA logo)
+//         images/corneliuselementary.png (school logo)
+// Writes: images/demos/pokemon.jpg, action-figure.jpg, huntrix.jpg, minecraft.jpg
 
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
@@ -15,10 +16,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const API_KEY = process.env.OPENAI_API_KEY;
 if (!API_KEY) { console.error('Error: OPENAI_API_KEY env var not set.'); process.exit(1); }
 
-const PHOTO_PATH = join(__dirname, 'images/demo-source.jpg');
-const AA_PATH    = join(__dirname, 'images/2021-AAI-White.png');
-const SRES_PATH  = join(__dirname, 'images/statesvilleroad.png');
-const OUT_DIR    = join(__dirname, 'images/demos');
+const PHOTO_PATH   = join(__dirname, 'images/demo-source.jpg');
+const AA_PATH      = join(__dirname, 'images/2021-AAI-White.png');
+const SCHOOL_PATH  = join(__dirname, 'images/corneliuselementary.png');
+const OUT_DIR      = join(__dirname, 'images/demos');
 mkdirSync(OUT_DIR, { recursive: true });
 
 const PERSON  = 'Micah';
@@ -66,21 +67,21 @@ PACKAGING LAYOUT — follow this exactly:
 Style: Realistic toy packaging. The plastic bubble must look real — glossy, with reflections. DO NOT add any other text beyond what is listed above.`
   },
   {
-    id: 'superhero',
-    prompt: `Create a superhero comic book cover. It must look like a real printed comic book cover, styled for printing as a 4x6 image.
+    id: 'huntrix',
+    prompt: `Photorealistic, 8K resolution group selfie photo. The central subject is the person from the reference photo — preserve their exact likeness with no face alterations and no beautification.
 
-COVER LAYOUT — follow this exactly:
-- TOP TITLE BANNER: Large bold retro comic lettering: "${PERSON}'s TECH ADVENTURES" — full width, navy blue background, gold letters, thick black outline.
-- SMALL TEXT below title: "Career Fair Edition · ${TEACHER}'s Class" — small but readable
-- MAIN ART (center, fills most of the cover): A full-body dynamic illustration of the person from the reference photo as a superhero:
-  - Colorful STEM-themed superhero costume (circuit board patterns, glowing blue tech lines)
-  - Flying or leaping heroically with fist forward, big smile
-  - Dramatic city skyline background with light beams and energy effects
-- SPEECH BUBBLE: "Creativity + Code = SUPERPOWERS!" — large, readable comic speech bubble
-- SKILL STRIP at the bottom of the art: Three small comic-style banners: "💡 CREATIVE" · "⚙️ ANALYTICAL" · "🤝 COLLABORATIVE"
-- Issue label (small, bottom right): "ISSUE #1"
+SCENE LAYOUT — follow this exactly:
+- SETTING: A packed concert stage/arena with dramatic stage lighting, smoke effects, and a roaring crowd in the background.
+- CENTRAL SUBJECT (from reference photo): Holding up an iPhone to take the selfie, arm outstretched toward the camera. They are smiling naturally and looking directly into the phone lens.
+- SURROUNDING CHARACTERS — ultra-realistic Kpop Demon Hunter band members Rumi, Zoey, and Mira:
+  - Rumi: hugging the central subject from the side naturally and warmly, leaning her head in close
+  - Zoey: leaning in playfully from the other side, big smile, close to the camera
+  - Mira: slightly behind, leaning forward into the frame with a bright cheerful expression
+  - All three are in stylish Kpop stage outfits — dramatic, fashionable, concert-ready
+- FRAMING: Wide-angle selfie camera style — everyone squeezed into the frame, fun and casual like close friends. Slight lens distortion typical of a phone selfie.
+- CAPTION OVERLAY (small, bottom of frame, semi-transparent dark bar): "${PERSON} · ${TEACHER}'s Class · Career Fair Edition"
 
-Style: Bold colors, thick black outlines, Ben-Day dot halftone texture, dynamic action lines. DO NOT add any other text beyond what is listed above.`
+Style: Cinematic quality. Realistic studio-grade stage lighting. Natural skin and fabric textures. HDR depth. Sharp details, vibrant yet natural colors. Realistic lens reflections, bokeh depth of field on the background crowd. DO NOT add any other text beyond what is listed above.`
   },
   {
     id: 'minecraft',
@@ -105,7 +106,7 @@ Style: Pure Minecraft pixel-art aesthetic. Dark background. Glowing enchantment 
 ];
 
 // Extends the image DOWNWARD and draws the sponsor banner in the new space.
-// Layout: [AA logo left] [STATESVILLE RD / ELEMENTARY / CAREER FAIR centered] [SRES eagle right]
+// Layout: [AA logo left] [CORNELIUS / ELEMENTARY / CAREER FAIR centered] [school logo right]
 // The AI image is completely untouched — no content ever gets cut off.
 async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
   const meta = await sharp(imageBuffer).metadata();
@@ -124,7 +125,7 @@ async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
   const AA_W = aaMeta.width;
   const AA_H = aaMeta.height;
 
-  const sresResized = await sharp(sresLogoBuffer)
+  const sresResized = await sharp(sresLogoBuffer)  // school logo
     .resize({ width: LOGO_MAX_W, height: LOGO_MAX_H, fit: 'inside', background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png().toBuffer();
   const sresMeta = await sharp(sresResized).metadata();
@@ -149,8 +150,8 @@ async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
     while (fs > 10 && text.length * fs * 0.54 > textAreaW) fs--;
     return fs;
   }
-  const fs1 = fitFontSize('STATESVILLE RD', Math.round(BANNER_H * 0.26));
-  const fs2 = fitFontSize('ELEMENTARY',     Math.round(BANNER_H * 0.22));
+  const fs1 = fitFontSize('CORNELIUS',  Math.round(BANNER_H * 0.26));
+  const fs2 = fitFontSize('ELEMENTARY', Math.round(BANNER_H * 0.22));
   const fs3 = Math.round(BANNER_H * 0.19);
 
   const line1Y = Math.round(BANNER_H * 0.25);
@@ -161,7 +162,7 @@ async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
   const bannerSvg = `<svg width="${W}" height="${BANNER_H}" xmlns="http://www.w3.org/2000/svg">
     <rect x="0" y="0" width="${W}" height="${BANNER_H}" fill="#1A3B8C"/>
     <rect x="0" y="0" width="${W}" height="4" fill="#F5A800"/>
-    <text x="${textCX}" y="${line1Y}" font-family="Arial, sans-serif" font-size="${fs1}" font-weight="800" fill="white" text-anchor="middle" dominant-baseline="middle">STATESVILLE RD</text>
+    <text x="${textCX}" y="${line1Y}" font-family="Arial, sans-serif" font-size="${fs1}" font-weight="800" fill="white" text-anchor="middle" dominant-baseline="middle">CORNELIUS</text>
     <text x="${textCX}" y="${line2Y}" font-family="Arial, sans-serif" font-size="${fs2}" font-weight="800" fill="white" text-anchor="middle" dominant-baseline="middle">ELEMENTARY</text>
     <text x="${textCX}" y="${line3Y}" font-family="Arial, sans-serif" font-size="${fs3}" font-weight="700" fill="#F5A800" text-anchor="middle" dominant-baseline="middle">CAREER FAIR</text>
   </svg>`;
@@ -242,12 +243,12 @@ async function generateCard(card, photoBuffer, aaBuffer, sresBuffer) {
 }
 
 async function main() {
-  const photoBuffer = readFileSync(PHOTO_PATH);
-  const aaBuffer    = readFileSync(AA_PATH);
-  const sresBuffer  = readFileSync(SRES_PATH);
+  const photoBuffer  = readFileSync(PHOTO_PATH);
+  const aaBuffer     = readFileSync(AA_PATH);
+  const schoolBuffer = readFileSync(SCHOOL_PATH);
 
   for (const card of cards) {
-    await generateCard(card, photoBuffer, aaBuffer, sresBuffer);
+    await generateCard(card, photoBuffer, aaBuffer, schoolBuffer);
   }
   console.log('\nAll demo cards generated!');
 }
