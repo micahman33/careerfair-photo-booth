@@ -75,6 +75,7 @@ PACKAGING LAYOUT — follow this exactly:
 - TOP OF BOX: "POP!" in the official Funko Pop logo style. Below it: "CAREER FAIR" as the series name. A small number badge in the top-right corner: "#1".
 - FIGURE INSIDE THE WINDOW: A classic Funko Pop vinyl figure of the person from the reference photo. Funko Pop style means: oversized round head, tiny stylized body, large black oval eyes with no pupils, minimal facial features, simplified clothing. Match the person's hair, glasses, and general clothing style but fully in Funko Pop form. The figure holds a small laptop or tablet accessory.
 - BOTTOM OF BOX NAMEPLATE: "${PERSON}" in bold white text on a colored band. Below it in smaller text: "${TEACHER}'s Class".
+- SKILL STRIP below the nameplate (on the cardboard, outside the window): Three small horizontal badges in bright colors reading: "💡 CREATIVE THINKER" · "⚙️ PROBLEM SOLVER" · "🤝 COLLABORATOR"
 - BOX SIDES: Subtle "Career Fair Edition" text and small star decorations in the Funko style.
 - BACKGROUND inside the window: Simple gradient matching the box color.
 
