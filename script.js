@@ -156,21 +156,18 @@ PACKAGING LAYOUT — follow this exactly:
 Style: Realistic toy packaging. The plastic bubble must look real — glossy, with reflections. DO NOT add any other text beyond what is listed above.`;
   }
 
-  if (cardType === 'huntrix-selfie') {
-    return `Photorealistic, 8K resolution group selfie photo. The central subject is the person from the reference photo — preserve their exact likeness with no face alterations and no beautification.
+  if (cardType === 'funko-pop') {
+    return `Create a Funko Pop vinyl figure in retail box packaging. The entire image IS the product — a real Funko Pop box as if photographed on a shelf. Styled for printing as a 4x6 image.
 
-SCENE LAYOUT — follow this exactly:
-- SETTING: A packed concert stage/arena with dramatic stage lighting, smoke effects, and a roaring crowd in the background.
-- CENTRAL SUBJECT (from reference photo): Holding up an iPhone to take the selfie, arm outstretched toward the camera. They are smiling naturally and looking directly into the phone lens.
-- SURROUNDING CHARACTERS — ultra-realistic Kpop Demon Hunter band members Rumi, Zoey, and Mira:
-  - Rumi: hugging the central subject from the side naturally and warmly, leaning her head in close
-  - Zoey: leaning in playfully from the other side, big smile, close to the camera
-  - Mira: slightly behind, leaning forward into the frame with a bright cheerful expression
-  - All three are in stylish Kpop stage outfits — dramatic, fashionable, concert-ready
-- FRAMING: Wide-angle selfie camera style — everyone squeezed into the frame, fun and casual like close friends. Slight lens distortion typical of a phone selfie.
-- CAPTION OVERLAY (small, bottom of frame, semi-transparent dark bar): "${personName} · ${teacherName}'s Class · Career Fair Edition"
+PACKAGING LAYOUT — follow this exactly:
+- BOX SHAPE: Classic Funko Pop window box — black cardboard with a large clear plastic window on the front showing the figure inside. The box has the characteristic Funko Pop angled top-right corner cut.
+- TOP OF BOX: "POP!" in the official Funko Pop logo style. Below it: "CAREER FAIR" as the series name. A small number badge in the top-right corner: "#1".
+- FIGURE INSIDE THE WINDOW: A classic Funko Pop vinyl figure of the person from the reference photo. Funko Pop style means: oversized round head, tiny stylized body, large black oval eyes with no pupils, minimal facial features, simplified clothing. Match the person's hair, glasses, and general clothing style but fully in Funko Pop form. The figure holds a small laptop or tablet accessory.
+- BOTTOM OF BOX NAMEPLATE: "${personName}" in bold white text on a colored band. Below it in smaller text: "${teacherName}'s Class".
+- BOX SIDES: Subtle "Career Fair Edition" text and small star decorations in the Funko style.
+- BACKGROUND inside the window: Simple gradient matching the box color.
 
-Style: Cinematic quality. Realistic studio-grade stage lighting. Natural skin and fabric textures. HDR depth. Sharp details, vibrant yet natural colors. Realistic lens reflections, bokeh depth of field on the background crowd. DO NOT add any other text beyond what is listed above.`;
+Style: Photorealistic product photography of the box, like an official Funko Pop listing image. Clean white or gradient background behind the box. The figure must unmistakably read as a Funko Pop — oversized head is essential. DO NOT add any other text beyond what is listed above.`;
   }
 
   if (cardType === 'minecraft-card') {

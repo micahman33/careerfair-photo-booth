@@ -2,9 +2,9 @@
 // Usage: OPENAI_API_KEY=sk-... node generate-demos.js
 //
 // Reads:  images/demo-source.jpg        (reference photo of you)
-//         images/AAI standard.png       (AA logo)
+//         images/2021-AAI-White.png     (AA logo)
 //         images/corneliuselementary.png (school logo)
-// Writes: images/demos/pokemon.jpg, action-figure.jpg, huntrix.jpg, minecraft.jpg
+// Writes: images/demos/pokemon.jpg, action-figure.jpg, funko-pop.jpg, minecraft.jpg
 
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
@@ -16,10 +16,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const API_KEY = process.env.OPENAI_API_KEY;
 if (!API_KEY) { console.error('Error: OPENAI_API_KEY env var not set.'); process.exit(1); }
 
-const PHOTO_PATH   = join(__dirname, 'images/demo-source.jpg');
-const AA_PATH      = join(__dirname, 'images/2021-AAI-White.png');
-const SCHOOL_PATH  = join(__dirname, 'images/corneliuselementary.png');
-const OUT_DIR      = join(__dirname, 'images/demos');
+const PHOTO_PATH  = join(__dirname, 'images/demo-source.jpg');
+const AA_PATH     = join(__dirname, 'images/2021-AAI-White.png');
+const SCHOOL_PATH = join(__dirname, 'images/corneliuselementary.png');
+const OUT_DIR     = join(__dirname, 'images/demos');
 mkdirSync(OUT_DIR, { recursive: true });
 
 const PERSON  = 'Micah';
@@ -67,21 +67,18 @@ PACKAGING LAYOUT — follow this exactly:
 Style: Realistic toy packaging. The plastic bubble must look real — glossy, with reflections. DO NOT add any other text beyond what is listed above.`
   },
   {
-    id: 'huntrix',
-    prompt: `Photorealistic, 8K resolution group selfie photo. The central subject is the person from the reference photo — preserve their exact likeness with no face alterations and no beautification.
+    id: 'funko-pop',
+    prompt: `Create a Funko Pop vinyl figure in retail box packaging. The entire image IS the product — a real Funko Pop box as if photographed on a shelf. Styled for printing as a 4x6 image.
 
-SCENE LAYOUT — follow this exactly:
-- SETTING: A packed concert stage/arena with dramatic stage lighting, smoke effects, and a roaring crowd in the background.
-- CENTRAL SUBJECT (from reference photo): Holding up an iPhone to take the selfie, arm outstretched toward the camera. They are smiling naturally and looking directly into the phone lens.
-- SURROUNDING CHARACTERS — ultra-realistic Kpop Demon Hunter band members Rumi, Zoey, and Mira:
-  - Rumi: hugging the central subject from the side naturally and warmly, leaning her head in close
-  - Zoey: leaning in playfully from the other side, big smile, close to the camera
-  - Mira: slightly behind, leaning forward into the frame with a bright cheerful expression
-  - All three are in stylish Kpop stage outfits — dramatic, fashionable, concert-ready
-- FRAMING: Wide-angle selfie camera style — everyone squeezed into the frame, fun and casual like close friends. Slight lens distortion typical of a phone selfie.
-- CAPTION OVERLAY (small, bottom of frame, semi-transparent dark bar): "${PERSON} · ${TEACHER}'s Class · Career Fair Edition"
+PACKAGING LAYOUT — follow this exactly:
+- BOX SHAPE: Classic Funko Pop window box — black cardboard with a large clear plastic window on the front showing the figure inside. The box has the characteristic Funko Pop angled top-right corner cut.
+- TOP OF BOX: "POP!" in the official Funko Pop logo style. Below it: "CAREER FAIR" as the series name. A small number badge in the top-right corner: "#1".
+- FIGURE INSIDE THE WINDOW: A classic Funko Pop vinyl figure of the person from the reference photo. Funko Pop style means: oversized round head, tiny stylized body, large black oval eyes with no pupils, minimal facial features, simplified clothing. Match the person's hair, glasses, and general clothing style but fully in Funko Pop form. The figure holds a small laptop or tablet accessory.
+- BOTTOM OF BOX NAMEPLATE: "${PERSON}" in bold white text on a colored band. Below it in smaller text: "${TEACHER}'s Class".
+- BOX SIDES: Subtle "Career Fair Edition" text and small star decorations in the Funko style.
+- BACKGROUND inside the window: Simple gradient matching the box color.
 
-Style: Cinematic quality. Realistic studio-grade stage lighting. Natural skin and fabric textures. HDR depth. Sharp details, vibrant yet natural colors. Realistic lens reflections, bokeh depth of field on the background crowd. DO NOT add any other text beyond what is listed above.`
+Style: Photorealistic product photography of the box, like an official Funko Pop listing image. Clean white or gradient background behind the box. The figure must unmistakably read as a Funko Pop — oversized head is essential. DO NOT add any other text beyond what is listed above.`
   },
   {
     id: 'minecraft',
@@ -108,16 +105,15 @@ Style: Pure Minecraft pixel-art aesthetic. Dark background. Glowing enchantment 
 // Extends the image DOWNWARD and draws the sponsor banner in the new space.
 // Layout: [AA logo left] [CORNELIUS / ELEMENTARY / CAREER FAIR centered] [school logo right]
 // The AI image is completely untouched — no content ever gets cut off.
-async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
+async function compositeBanner(imageBuffer, aaLogoBuffer, schoolLogoBuffer) {
   const meta = await sharp(imageBuffer).metadata();
   const W = meta.width;
   const H = meta.height;
   const BANNER_H   = Math.round(H * 0.18);
   const PAD        = Math.round(W * 0.03);
-  const LOGO_MAX_W = Math.round(W * 0.195); // ~200px at 1024w
+  const LOGO_MAX_W = Math.round(W * 0.195);
   const LOGO_MAX_H = Math.round(BANNER_H * 0.82);
 
-  // Resize each logo to fit inside LOGO_MAX_W × LOGO_MAX_H (preserve aspect ratio)
   const aaResized = await sharp(aaLogoBuffer)
     .resize({ width: LOGO_MAX_W, height: LOGO_MAX_H, fit: 'inside', background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png().toBuffer();
@@ -125,26 +121,23 @@ async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
   const AA_W = aaMeta.width;
   const AA_H = aaMeta.height;
 
-  const sresResized = await sharp(sresLogoBuffer)  // school logo
+  const schoolResized = await sharp(schoolLogoBuffer)
     .resize({ width: LOGO_MAX_W, height: LOGO_MAX_H, fit: 'inside', background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png().toBuffer();
-  const sresMeta = await sharp(sresResized).metadata();
-  const SRES_W = sresMeta.width;
-  const SRES_H = sresMeta.height;
+  const schoolMeta = await sharp(schoolResized).metadata();
+  const SCHOOL_W = schoolMeta.width;
+  const SCHOOL_H = schoolMeta.height;
 
-  // Positions (relative to banner top)
-  const aaX   = PAD;
-  const aaY   = Math.round((BANNER_H - AA_H)   / 2);
-  const sresX = W - PAD - SRES_W;
-  const sresY = Math.round((BANNER_H - SRES_H) / 2);
+  const aaX     = PAD;
+  const aaY     = Math.round((BANNER_H - AA_H)     / 2);
+  const schoolX = W - PAD - SCHOOL_W;
+  const schoolY = Math.round((BANNER_H - SCHOOL_H) / 2);
 
-  // Text centered between the two logos
   const textLeft  = aaX + AA_W + PAD;
-  const textRight = sresX - PAD;
+  const textRight = schoolX - PAD;
   const textCX    = Math.round((textLeft + textRight) / 2);
   const textAreaW = textRight - textLeft;
 
-  // Font sizes — approximate char width at ~0.54× font size
   function fitFontSize(text, maxFs) {
     let fs = maxFs;
     while (fs > 10 && text.length * fs * 0.54 > textAreaW) fs--;
@@ -158,7 +151,6 @@ async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
   const line2Y = Math.round(BANNER_H * 0.52);
   const line3Y = Math.round(BANNER_H * 0.80);
 
-  // SVG banner strip
   const bannerSvg = `<svg width="${W}" height="${BANNER_H}" xmlns="http://www.w3.org/2000/svg">
     <rect x="0" y="0" width="${W}" height="${BANNER_H}" fill="#1A3B8C"/>
     <rect x="0" y="0" width="${W}" height="4" fill="#F5A800"/>
@@ -169,19 +161,15 @@ async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
 
   const bannerBuffer = await sharp(Buffer.from(bannerSvg)).png().toBuffer();
 
-  // Extend the image downward and composite everything into the new space
   const composited = await sharp(imageBuffer)
     .extend({ bottom: BANNER_H, background: { r: 26, g: 59, b: 140, alpha: 255 } })
     .composite([
-      { input: bannerBuffer, top: H,          left: 0     },
-      { input: aaResized,    top: H + aaY,    left: aaX   },
-      { input: sresResized,  top: H + sresY,  left: sresX },
+      { input: bannerBuffer,  top: H,            left: 0       },
+      { input: aaResized,     top: H + aaY,      left: aaX     },
+      { input: schoolResized, top: H + schoolY,  left: schoolX },
     ])
     .toBuffer();
 
-  // Scale to 4×6 print size (1200×1800px = 300 DPI for Walgreens/standard photo lab).
-  // Our image is taller/narrower than 4×6, so scale to fit height and fill the
-  // narrow side margins with navy to match the banner — looks intentional.
   const PRINT_W = 1200;
   const PRINT_H = 1800;
   const cMeta   = await sharp(composited).metadata();
@@ -191,31 +179,26 @@ async function compositeBanner(imageBuffer, aaLogoBuffer, sresLogoBuffer) {
   const offsetX = Math.round((PRINT_W - scaledW) / 2);
   const offsetY = Math.round((PRINT_H - scaledH) / 2);
 
-  const scaledCard = await sharp(composited)
-    .resize(scaledW, scaledH)
-    .toBuffer();
+  const scaledCard = await sharp(composited).resize(scaledW, scaledH).toBuffer();
 
-  // Navy background canvas, then place scaled card centered
   const navyBg = await sharp({
     create: { width: PRINT_W, height: PRINT_H, channels: 3, background: { r: 26, g: 59, b: 140 } }
   }).png().toBuffer();
 
-  const result = await sharp(navyBg)
+  return sharp(navyBg)
     .composite([{ input: scaledCard, top: offsetY, left: offsetX }])
     .jpeg({ quality: 92 })
     .toBuffer();
-
-  return result;
 }
 
-async function generateCard(card, photoBuffer, aaBuffer, sresBuffer) {
+async function generateCard(card, photoBuffer, aaBuffer, schoolBuffer) {
   console.log(`\nGenerating ${card.id}...`);
 
   const form = new FormData();
   form.append('image[]', new Blob([photoBuffer], { type: 'image/jpeg' }), 'photo.jpg');
   form.append('image[]', new Blob([aaBuffer],    { type: 'image/png'  }), 'aa-logo.png');
   form.append('prompt',        card.prompt);
-  form.append('model',         'gpt-image-1.5');
+  form.append('model',         'gpt-image-1');
   form.append('size',          '1024x1536');
   form.append('output_format', 'png');
   form.append('quality',       'high');
@@ -232,10 +215,8 @@ async function generateCard(card, photoBuffer, aaBuffer, sresBuffer) {
   const b64 = data.data?.[0]?.b64_json;
   if (!b64) throw new Error(`No image data for ${card.id}`);
 
-  const rawBuffer = Buffer.from(b64, 'base64');
-
   console.log(`  Compositing banner...`);
-  const finalBuffer = await compositeBanner(rawBuffer, aaBuffer, sresBuffer);
+  const finalBuffer = await compositeBanner(Buffer.from(b64, 'base64'), aaBuffer, schoolBuffer);
 
   const outPath = join(OUT_DIR, `${card.id}.jpg`);
   writeFileSync(outPath, finalBuffer);
