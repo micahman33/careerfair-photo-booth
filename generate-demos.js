@@ -79,7 +79,7 @@ PACKAGING LAYOUT — follow this exactly:
 - BOX SIDES: Subtle "Career Fair Edition" text and small star decorations in the Funko style.
 - BACKGROUND inside the window: Simple gradient matching the box color.
 
-Style: The box must fill the entire image frame edge to edge — no white space, no floating product look, no background behind the box. The box IS the image, like the other cards in this series. The figure must unmistakably read as a Funko Pop — oversized head is essential. DO NOT add any other text beyond what is listed above.`
+Style: The box is sitting upright on a wooden collector's shelf, slightly angled for a natural look. Behind and around it: soft bokeh of other Funko Pop boxes, dim shelf lighting, maybe a subtle glow. Cinematic collector's room vibe — warm, moody, like a display cabinet photo. The box should be the clear hero of the shot, large in frame. The figure must unmistakably read as a Funko Pop — oversized head is essential. DO NOT add any other text beyond what is listed above.`
   },
   {
     id: 'minecraft',
