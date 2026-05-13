@@ -117,6 +117,40 @@ function checkGenerateBtn() {
 
 function buildPrompt(cardType, personName, teacherName) {
 
+  if (cardType === 'roblox-avatar') {
+    return `Create a Roblox Developer Profile Card. The entire image IS the card — portrait orientation, styled for printing as a 4x6 image.
+
+CARD LAYOUT — follow this exactly:
+- BACKGROUND: Dark navy/space gradient with floating Roblox-style UI elements and subtle grid lines, like the Roblox studio interface.
+- TOP HEADER: The Roblox logo "ROBLOX" in the official bold red Roblox font. To the right: a badge reading "⭐ DEVELOPER EDITION". Below the logo: "CAREER FAIR SERIES" in small white text.
+- AVATAR SHOWCASE (center, large, ~55% of card height): The person from the reference photo reimagined as a Roblox avatar — blocky rectangular head, classic Roblox body proportions, big expressive eyes, wearing a cool customized outfit (hoodie, sneakers, accessories). Fully in Roblox avatar style — NOT photorealistic. The avatar is in a dynamic pose, like jumping or giving a thumbs up. Background behind the avatar: a bright colorful Roblox game world scene.
+- PLAYER NAME BANNER: "@${personName}" in bold white Roblox-style font with a dark translucent pill background.
+- STATS PANEL (bottom ~28% of card, dark UI panel with Roblox-style rounded corners and icons):
+  - "${teacherName}'s Class" in small text at top
+  - Four stat rows with icon, label, and filled bar:
+    🧠  PROBLEM SOLVING    ████████░░  85
+    💡  CREATIVITY         █████████░  92
+    🤝  TEAMWORK           ████████░░  88
+    🚀  INNOVATION         █████████░  95
+  - Bars use bright Roblox green/teal gradient
+
+Style: Authentic Roblox aesthetic — bold, colorful, UI-forward, game-feel. Looks like an official Roblox collectible card. DO NOT add any other text beyond what is listed above.`;
+  }
+
+  if (cardType === 'pixar-poster') {
+    return `Create a Pixar animated movie poster. The entire image IS the poster — portrait orientation, styled for printing as a 4x6 image.
+
+POSTER LAYOUT — follow this exactly:
+- MOVIE TITLE (top of poster, large): "${personName} AND THE CODE QUEST" — in the style of a Pixar movie title: big, bold, playful lettering with a glow or shadow effect. Bright warm gold/orange colors.
+- TAGLINE (small text below title): "One kid. Infinite ideas. The adventure starts now."
+- MAIN CHARACTER ART (center, fills most of the poster): The person from the reference photo reimagined as a Pixar CGI animated character — smooth stylized skin, expressive oversized eyes, warm natural colors, the exact Pixar quality rendering. Match their face shape, hair, and glasses but fully in Pixar CGI style. The character is in a heroic adventure pose holding a glowing laptop or tablet like a magic artifact, looking excited and confident. Colorful cinematic background: a digital/tech world that looks magical — glowing circuits, floating code, bright light beams. Like a Pixar STEM adventure film.
+- CREDITS STRIP (bottom of poster, small text): "${teacherName}'s Class · Career Fair Edition"
+- SKILL BADGES along the bottom above credits — four small round badge icons in Pixar style:
+  💡 CREATIVE   🔧 BUILDER   🤝 TEAMMATE   🚀 INNOVATOR
+
+Style: Authentic Pixar movie poster — cinematic, warm, emotionally engaging. Smooth CGI character rendering. Feels like a real Pixar film poster you'd see at a theater. DO NOT add any other text beyond what is listed above.`;
+  }
+
   if (cardType === 'trading-card') {
     return `Create a fun, ultra-rare Pokemon-style trading card. The image must look like a real physical trading card, perfectly centered, styled for printing as a 4x6 image.
 
@@ -486,8 +520,8 @@ document.getElementById('start-over-btn').addEventListener('click', () => {
   document.getElementById('teacherName').value = '';
   document.getElementById('preview-img').src = '';
   document.querySelectorAll('.card-opt').forEach(o => o.classList.remove('selected'));
-  document.querySelector('.card-opt[data-value="trading-card"]').classList.add('selected');
-  selectedCardType = 'trading-card';
+  document.querySelector('.card-opt[data-value="roblox-avatar"]').classList.add('selected');
+  selectedCardType = 'roblox-avatar';
   checkGenerateBtn();
 
   document.getElementById('camera-row').hidden = false;
